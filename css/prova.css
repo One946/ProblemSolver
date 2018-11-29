@@ -1,0 +1,124 @@
+/* CSS HOME E GENERALE*/ 
+
+body{
+	font-family: sans-serif;
+	background-color: white;
+	background-repeat: no-repeat;
+
+}
+
+.navbar{
+	width: 100%;
+	background-color: #555;
+	/*levo l'overflow altrimenti copre troppo l'immagine*/
+}
+
+.navbar a {
+	float: left;
+	text-align: center;
+	padding: 12px;
+	color: black;
+	text-decoration: none;
+	font-size:17px;
+}
+
+
+.navbar a:hover{
+	background-color: white;
+}
+
+.active{
+	background-color: #33b5e5;
+}
+
+@media screen and (max-width: 500px){
+	.navbar a {
+		float:none;
+		display: block;
+	}
+	.stripe{
+		top: 50%;
+		margin: auto;
+		background-color: lightgrey;
+		text-align: center;
+		opacity: 0.75;
+		border-radius: 25px;
+	}
+	/*.footer{
+		top:90%;
+		margin: auto;
+		width: 100%;
+		height: 10px;
+	}*/
+
+}
+
+.container{
+	position: relative;
+}
+
+
+.stripe{
+	float: left;
+	background-color: lightgrey;
+	margin: auto;
+	top: 50px;
+	width: 100%;
+	padding: 10px;
+	vertical-align: middle;
+	text-align: center;
+	opacity: 0.55;
+	border-radius: 25px;
+}
+
+.footer{
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background-color: lightgrey;
+	color: black; 
+	text-align: center;
+}
+
+
+
+/*CSS FORM LOGIN*/
+
+
+
+input[type=text], input[type=password] {
+   width: 10%;
+   margin-top: 300px;
+}
+
+.logincontainer{
+	padding: 16px;
+}
+
+span.psw{
+	float: right;
+	padding-top: 16px;
+}
+
+
+@media screen and (max-width: 300px) {
+    span.psw {
+        display: block;
+        float: none;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
