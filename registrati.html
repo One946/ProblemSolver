@@ -1,9 +1,3 @@
-<?php
-  session_start();
-?>  
-
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,9 +9,6 @@
 <body>
 
 <div class="container">
-  <form>
-  
-
       <nav class="navbar">
           <span class="open-slide">
             <a href="#" onclick="openSlideMenu()">
@@ -30,9 +21,10 @@
           </span>
           <ul class="navbar-nav">
             <li><a href="http://localhost/2.0/index.php">Home</a></li>
-            <li><a href="http://localhost/2.0/prova.php">Naviga Problemi</a></li>
+            <li><a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></li>
             <li><a href="http://localhost/2.0/report.php">Riporta Problema</a></li>
             <li><a href="#">Login/Registrati</a></li>
+            <li><a href="http://localhost/2.0/cerca.php"> Cerca Problemi</a><li>
           </ul>
   
         </nav>
@@ -40,11 +32,14 @@
         <div id="side-menu" class="side-nav">
             <a href="#" class="btn-close" onclick="closeSlideMenu()">&times;</a>
             <a href="http://localhost/2.0/index.php">Home</a>
-            <a href="http://localhost/2.0/prova.php">Naviga Problemi</a></a>
+            <a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></a>
             <a href="http://localhost/2.0/report.php">Riporta Problema</a>
             <a href="#">Login/Registrati</a>
+            <li><a href="http://localhost/2.0/cerca.php"> Cerca Problemi</a><li>
         </div>
-    
+
+<!--Form di registrazione-->
+<form method="POST" action="register.php">
     <h1>Registrati</h1>
     <p>Inserisci i tuoi dati per creare un account.</p>
 
@@ -61,10 +56,13 @@
     <input type="text" placeholder="Codice Fiscale" name="cf" required maxlength="16" minlength="16">
 
     <label for="psw"><b> Password </b></label>
-    <input type="password" placeholder="Password" name="psw" required>
+    <input type="password" placeholder="Password" name="password" required>
 
-    <label for="psw-repeat"><b> Inserisci nuovamente la password </b></label>
-    <input type="password" placeholder="Password" name="psw-repeat" required>
+    <label for="pswr"><b> Inserisci nuovamente la password </b></label>
+    <input type="password" placeholder="Password" name="passwordr" required>
+
+    <label for="secretID"><b> Inserisci un numero utente che sarà utilizzato per garantire la tua privacy</b></label>
+    <input type="text" placeholder="secretID" name="secretID" required>
     
     
     <a class="termini" href="#" style="color:dodgerblue">Termini e Politiche di Privacy</a>
@@ -77,6 +75,7 @@
 </div>
 
 <script>
+//sccript per menù a scomparsa
 		function openSlideMenu(){
 			document.getElementById("side-menu").style.width="250px"
 			document.getElementById("main.").style.marginLeft="250px"

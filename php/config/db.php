@@ -1,5 +1,5 @@
 <?php
-    $conn = mysqli_connect("localhost", "superuser", "Cavallo2_","2.0");
+    $conn = mysqli_connect("localhost", "superuser", "Cavallo2_","problemSolver");
 
     //controllo connessione
     if(mysqli_connect_errno()){

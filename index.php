@@ -1,6 +1,6 @@
 <?php
-	session_start();
-	$_SESSION["secretID"] = 45;
+//creo una sessione per rendere le operazioni meno "hardcoded"
+	session_start();	
 ?>
 
 <!DOCTYPE html>
@@ -14,8 +14,9 @@
 </head>
 <body background="messina.jpg">
 	
-	<!-- navbar -->
+
 	<div class="container">
+		<!-- navbar -->
 			<nav class="navbar">
 				<span class="open-slide">
 					<a href="#" onclick="openSlideMenu()">
@@ -28,9 +29,10 @@
 				</span>
 				<ul class="navbar-nav">
 					<li><a href="#">Home</a></li>
-					<li><a href="http://localhost/2.0/prova.php">Naviga Problemi</a></li>
+					<li><a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></li>
 					<li><a href="http://localhost/2.0/report.php">Riporta Problema</a></li>
-					<li><a href="http://localhost/2.0/login.php">Login/Registrati</a></li>
+					<li><a href="http://localhost/2.0/login.html">Login/Registrati</a></li>
+					<li><a href="http://localhost/2.0/cerca.php"> Cerca Problemi</a><li>
 				</ul>
 
 			</nav>
@@ -53,22 +55,18 @@
 				</b>
 			</p>
 		</div>
-
 		<div></div>
+				
 		<!-- footer-->
-
 		<div class="footer">
 			<p>
 				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-
 			</p>
-
-
 		</div>
 	</div>
-	<script>
 
+	<script>
 			//script per aprire e chiudere il menù a scomparsa in modalità mobile
 		function openSlideMenu(){
 			document.getElementById("side-menu").style.width="250px"

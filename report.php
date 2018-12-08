@@ -1,5 +1,11 @@
 <?php
     session_start();
+    //require("config/db.php");
+    //require("config/config.php");
+    //$q= "SELECT * FROM Categorie WHERE 1";
+    //$ris=mysqli_query($conn,$q);
+        
+                        
 ?>
 
 
@@ -30,9 +36,10 @@
             </span>
             <ul class="navbar-nav">
                 <li><a href="http://localhost/2.0/index.php">Home</a></li>
-                <li><a href="http://localhost/2.0/prova.php">Naviga Problemi</a></li>
+                <li><a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></li>
                 <li><a href="#">Riporta Problema</a></li>
-                <li><a href="http://localhost/2.0/login.php">Login/Registrati</a></li>
+                <li><a href="http://localhost/2.0/login.html">Login/Registrati</a></li>
+                <li><a href="http://localhost/2.0/cerca.php"> Cerca Problemi</a><li>
             </ul>
 
             </nav>
@@ -40,16 +47,17 @@
             <div id="side-menu" class="side-nav">
                 <a href="#" class="btn-close" onclick="closeSlideMenu()">&times;</a>
                 <a href="http://localhost/2.0/index.php">Home</a>
-                <a href="http://localhost/2.0/prova.php">Naviga Problemi</a></a>
+                <a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></a>
                 <a href="#">Riporta Problema</a>
-                <a href="http://localhost/2.0/login.php">Login/Registrati</a>
+                <a href="http://localhost/2.0/login.html">Login/Registrati</a>
+                <li><a href="http://localhost/2.0/cerca.php"> Cerca Problemi</a><li>
             </div>
     </div>
 
 <!--FORM INSERIMENTO PROBLEMA-->
 
     <div>
-        <form enctype="multipart/form-data">
+        <form method= 'POST' action="insert.php"  enctype="multipart/form-data">
             <label for="titolo"><b> Inserisci il titolo del problema: </b></label> <br>
             <input type="text" id="titolo" name="titolo" class="titolo" placeholder="TITOLO" required> <br>
             <label for="descrizione"><b> Descrivi il problema che hai riscontrato: </b></label> <br>
@@ -57,50 +65,27 @@
             <label for="tag"><b>Inerisci alcuni tag per caratterizzare il problema</b></label> <br>
             <input type="text" id="tag" name="tag" class="tag" placeholder="Inserisci dei tag per caratterizzare il problema "> <br><br>
             <input type="checkbox" id="anonimo" name="anonimo" class="anonimo">Desideri rimanere anonimo? <br><br>
-            <p class="posiziona">Carica una foto</p> <input type="file" name="foto" class="foto" accept="image/*"> 
             <p class="posiziona">Seleziona una categoria</p>
             <select type="text" id="categoria" name="categoria" class="categoria" required>
-                    <option value="sanita">sanita</option>
-                    <option value="trasporti">trasporti</option>
-                    <option value="ordine pubblico">ordine pubblico</option>
-                    <option value="istruzione">istruzione</option>
-                    <option value="amministrazione">amministrazione</option>
-                    <option value="altro">altro</option>
-            </select> 
-            <button type="submit" id="button"style ="margin-left: 300px;" onclick="sendProb()">Invia!</button>
+                <?php  
+                        $i=0;
+                        $categorie= mysqli_fetch_all($ris,MYSQLI_ASSOC);
+                        while($i<count($categorie)){
+                            echo'<option value="'.$categorie[$i]['descrizione'].'">'.$categorie[$i]['descrizione']."</option>";
+                            $i++;
+                        }
+                        $i=0;
+                ?>
+            </select>
+            <!--button type="submit" id="button"style ="margin-left: 300px;" onclick="sendProb()">Invia!</button-->
+            <button type="submit" id="button"style ="margin-left: 300px;">Invia!</button>
 
         </form>
-        <script>
-            document.getElementById('button').addEventListener('click', sendProb);
-            //funzione per creare il json da inviare con la richiesta asincrona
-            function createJson(){
-                var myObj = {
-                    titolo : document.getElementById("titolo").value,
-                    descrizione : document.getElementById("descrizione").value,
-                    tag: document.getElementById("tag").value,
-                    anonimo: document.getElementById("anonimo").value,
-                    categoria: document.getElementById("categoria").value
-                };
-                return myObj;
-            }
-            // funzione per effetturare la richiesta asincrona
-            function sendProb(e){
-                e.preventDefault();
-                var json = createJson();
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST","insert.php",true);
-                var x = this.responseText;
-                console.log(x);
-                xhr.send(json);
-                var x = this.responseText;
-                console.log(x);
-            }
-                
-        </script>
     </div>
 
 
    <script>
+   //script per il menù a scomparsa 
         function openSlideMenu(){
             document.getElementById("side-menu").style.width="250px"
             document.getElementById("main.").style.marginLeft="250px"
