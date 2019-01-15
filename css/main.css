@@ -8,7 +8,7 @@ body{
 }
 
 .parallax{
-	background-image: url("http://localhost/PROblemSolver/messina.jpg");
+	background-image: url("http://localhost/2.0/messina.jpg");
 	height: 500px;
 
 		/* Creo l'effetto parallax per lo scrolling per rendere più usabile la sezione dei problemi */

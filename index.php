@@ -48,7 +48,7 @@
 
 		<!-- main body-->
 		<div class="stripe">
-			<h1>BENVENUTO NEL PORTALE 2.0 </h1>
+			<h1>BENVENUTO NEL PORTALE Problem Solver </h1>
 			<p> 
 				<b>
 			riporta i tuoi problemi o consulta i problemi già riportati navigando tramite il menù soprastante

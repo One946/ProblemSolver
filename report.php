@@ -1,11 +1,5 @@
 <?php
-    session_start();
-    //require("config/db.php");
-    //require("config/config.php");
-    //$q= "SELECT * FROM Categorie WHERE 1";
-    //$ris=mysqli_query($conn,$q);
-        
-                        
+    session_start();        
 ?>
 
 
@@ -57,34 +51,102 @@
 <!--FORM INSERIMENTO PROBLEMA-->
 
     <div>
-        <form method= 'POST' action="insert.php"  enctype="multipart/form-data">
+        <form id="form">
             <label for="titolo"><b> Inserisci il titolo del problema: </b></label> <br>
-            <input type="text" id="titolo" name="titolo" class="titolo" placeholder="TITOLO" required> <br>
+            <input type="text" id="titolo"  class="titolo" placeholder="TITOLO" required> <br>
+            
             <label for="descrizione"><b> Descrivi il problema che hai riscontrato: </b></label> <br>
-            <textarea name="descrizione" id="descrizione" class="descrizione" placeholder="Descrivi il problema che hai riscontrato..." required> </textarea><br>
+            <textarea id="descrizione" class="descrizione" placeholder="Descrivi il problema che hai riscontrato..." required> </textarea><br>
+            
             <label for="tag"><b>Inerisci alcuni tag per caratterizzare il problema</b></label> <br>
-            <input type="text" id="tag" name="tag" class="tag" placeholder="Inserisci dei tag per caratterizzare il problema "> <br><br>
-            <input type="checkbox" id="anonimo" name="anonimo" class="anonimo">Desideri rimanere anonimo? <br><br>
+            <input type="text" id="tag" class="tag" placeholder="Inserisci dei tag per caratterizzare il problema "> <br><br>
+            
+            <input type="checkbox" id="anonimo" class="anonimo">Desideri rimanere anonimo? <br><br>
+            
+            <label for="tag"><b>Inerisci l'ubicazione del problema</b></label> <br>
+            <input type="text" id="ubicazione" class="tag" placeholder="Inserisci l'ubicazione del problema"> <br><br>
+
             <p class="posiziona">Seleziona una categoria</p>
-            <select type="text" id="categoria" name="categoria" class="categoria" required>
-                <?php  
-                        $i=0;
-                        $categorie= mysqli_fetch_all($ris,MYSQLI_ASSOC);
-                        while($i<count($categorie)){
-                            echo'<option value="'.$categorie[$i]['descrizione'].'">'.$categorie[$i]['descrizione']."</option>";
-                            $i++;
-                        }
-                        $i=0;
-                ?>
+            <select type="text" id="categoria" class="categoria" required>
+
+            
+
+
             </select>
-            <!--button type="submit" id="button"style ="margin-left: 300px;" onclick="sendProb()">Invia!</button-->
             <button type="submit" id="button"style ="margin-left: 300px;">Invia!</button>
+            <!--button type="submit" id="button"style ="margin-left: 300px;">Invia!</button-->
 
         </form>
     </div>
 
 
    <script>
+
+       //selezione dinamica dal db delle categorie
+       var select = document.getElementById("categoria");
+    
+       var selectCategorie = function() {
+           var xhr = new XMLHttpRequest();
+           xhr.open("GET","http://localhost/2.0/php/categorie.php");
+           xhr.onload=function(){
+                var arrCategorie = JSON.parse(xhr.responseText);
+                var i=0; 
+                while(i<arrCategorie.length){
+                    select.innerHTML+= `  <option value="${arrCategorie[i].descrizione}" > ${arrCategorie[i].descrizione} </option>  ` ; 
+                    i++;
+                }
+            };
+            xhr.send();
+        };
+      
+      select.addEventListener("click",selectCategorie, {once: true});
+
+
+//creazione json
+
+       var crtJson = function () {
+           var problema= {
+               titolo: document.getElementById("titolo").value,
+               descrizione: document.getElementById("descrizione").value,
+               tag: document.getElementById("tag").value,
+               anonimo: document.getElementById("anonimo").checked,
+               categoria: document.getElementById("categoria").value,
+                ubicazione: document.getElementById("ubicazione").value,
+           };
+           return problema;
+       }
+
+//invio del problema
+    submit = document.getElementById("form").addEventListener("submit", sendProb);
+    function sendProb(e){
+        e.preventDefault()
+        var problema = crtJson();
+        problema = JSON.stringify(problema);
+        //console.log(problema);
+        var post = new XMLHttpRequest();
+        post.open("POST","http://localhost/2.0/php/insert.php");
+        post.setRequestHeader('Content-Type', 'application/json')
+        post.onload= function(){
+            //console.log(post.responseText);
+        };
+        post.send(problema);
+       }
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
    //script per il menù a scomparsa 
         function openSlideMenu(){
             document.getElementById("side-menu").style.width="250px"

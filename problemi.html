@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+	<meta charset="utf-8" />
 	<title>2.0</title>
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	
 	<link rel="stylesheet" type="text/css" href="http://localhost/2.0/css/main.css">
 </head>
-<body background="messina.jpg">
-	
-
-	<div class="container">
+<body class="parallax">
 		<!-- navbar -->
-			<nav class="navbar">
+			<nav class="navbar" style="   position: -webkit-sticky;
+			position: sticky;
+			top: 0;
+			z-index:1;">
 				<span class="open-slide">
 					<a href="#" onclick="openSlideMenu()">
 					  <svg width="30" height="30">
@@ -23,7 +24,7 @@
 					</a>
 				</span>
 				<ul class="navbar-nav">
-					<li><a href="#">Home</a></li>
+					<li><a href="http://localhost/2.0/index.php">Home</a></li>
 					<li><a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></li>
 					<li><a href="http://localhost/2.0/report.php">Riporta Problema</a></li>
 					<li><a href="http://localhost/2.0/login.html">Login/Registrati</a></li>
@@ -40,28 +41,67 @@
 					<a href="#">Login/Registrati</a>
 			</div>
 
+			<div id="problemi"></div>
+			<div id="problema"></div>
 
-		<!-- main body-->
-		<div class="stripe">
-			<h1>BENVENUTO NEL PORTALE 2.0 </h1>
-			<p> 
-				<b>
-			riporta i tuoi problemi o consulta i problemi già riportati navigando tramite il menù soprastante
-				</b>
-			</p>
-		</div>
-		<div></div>
-				
-		<!-- footer-->
-		<div class="footer">
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			</p>
-		</div>
-	</div>
+
+
 
 	<script>
+		//selezione il div padre che conterrà tutti i problemi
+		var div= document.getElementById("problemi");//div contine l'anteprima di tutti i problemi
+		var div2= document.getElementById("problema");//div2 contiene il singolo problema
+
+		//invio la richiesta per richiedere i problemi
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET','http://localhost/2.0/php/problemi.php');
+		xhr.onload=function(){
+			var arrProb =JSON.parse(xhr.responseText);
+			spawn(arrProb);
+		};
+		xhr.send();
+	
+
+
+		// funzione di visualizzazione problemi
+		function spawn(data){
+			var testo= "";
+			var link = "";
+		// visualizzo i problemi
+			for(i=0; i< data.length; i++){
+				testo += "<div style='opacity:0.95; background: #f4f4f4; margin: auto; width:1000px; border-radius: 20px; text-align: center; color: #3b5998;   '><h1>"+data[i].titolo+ "</h1> <p id='p"+data[i].idProblema+"'> problema numero:"+data[i].idProblema+"</p> <button id='b"+data[i].idProblema+"' onclick=showP("+data[i].idProblema+")> Per saperne di più! </button></div> <br>";
+				//link  += "<button> Per saperne di più! </button>"
+			}
+			div.insertAdjacentHTML("beforeend",testo+link); //comando per inserire elementi nel dom
+		}
+
+		//funzione visualizzazione singolo problema
+		function showP(idP){
+			figli=div.getElementsByTagName("div");//.style.visibility = "hidden"; //nascondo gli altri problemi
+			for(i=0;i<figli.length;i++){
+				figli[i].style.visibility="hidden";
+			}
+			xhr = new XMLHttpRequest();
+			xhr.open('POST','http://localhost/2.0/php/problema.php')
+			xhr.onload=function(){
+				var problema =JSON.parse(xhr.responseText);
+				console.log(problema);
+				testo="<div style='opacity:0.95; background: #f4f4f4; margin: auto; width:95%; border-radius: 20px; text-align: center;'> <p> ID problema : "+problema.idProblema+"</p></div>";
+				console.log(testo);
+				div.insertAdjacentHTML("afterbegin",testo);
+			}
+			//console.log(idP) 
+			xhr.send(idP)
+		}
+		
+
+
+
+
+
+
+
+
 			//script per aprire e chiudere il menù a scomparsa in modalità mobile
 		function openSlideMenu(){
 			document.getElementById("side-menu").style.width="250px"
