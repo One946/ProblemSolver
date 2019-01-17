@@ -76,24 +76,48 @@
 		}
 
 		//funzione visualizzazione singolo problema
+		//******************************************************************
+		var f;
 		function showP(idP){
 			figli=div.getElementsByTagName("div");//.style.visibility = "hidden"; //nascondo gli altri problemi
 			for(i=0;i<figli.length;i++){
 				figli[i].style.visibility="hidden";
 			}
-			xhr = new XMLHttpRequest();
-			xhr.open('POST','http://localhost/2.0/php/problema.php')
-			xhr.onload=function(){
-				var problema =JSON.parse(xhr.responseText);
-				console.log(problema);
-				testo="<div style='opacity:0.95; background: #f4f4f4; margin: auto; width:95%; border-radius: 20px; text-align: center;'> <p> ID problema : "+problema.idProblema+"</p></div>";
+			
+
+			//richiesta problema
+			function formattazione(data){
+				var problema =JSON.parse(data);
+				var k;
+				var testo;
+				
+
+
+				//Formattazione problema
+
+				if(problema.anonimo){
+					k="l'utete ha deciso di effettuare la segnalazione in maniera anonima"
+				}
+				else{
+					k="l'utente che ha riportato il problema corrisponde al codice utente numero : "+problema.secretID
+				}
+				testo="<div  class='stripe'> <p> ID problema : "+problema.idProblema+"</p> <div> <h1>"+problema.titolo+"</h1><br><p>"+problema.descrizione+"</p><br><p>"+k+"</p></div></div>"; //troppo hard coded? come torno indietro? basta cliccare su lla bara o devo mettere un pulsante? i commenti?
 				console.log(testo);
+				f= testo;
+
+
+
 				div.insertAdjacentHTML("afterbegin",testo);
 			}
-			//console.log(idP) 
-			xhr.send(idP)
+			xhr = new XMLHttpRequest();
+			xhr.open('POST','http://localhost/2.0/php/problema.php');
+			xhr.onload= function(){ formattazione(xhr.responseText)};
+			console.log(f);
+			
+
+			xhr.send(idP);
 		}
-		
+//****************************************************************************************************		
 
 
 
