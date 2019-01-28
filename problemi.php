@@ -25,9 +25,9 @@
 				</span>
 				<ul class="navbar-nav">
 					<li><a href="http://localhost/2.0/index.php">Home</a></li>
-					<li><a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></li>
+					<li><a href="http://localhost/2.0/problemi.php">Naviga Problemi</a></li>
 					<li><a href="http://localhost/2.0/report.php">Riporta Problema</a></li>
-					<li><a href="http://localhost/2.0/login.html">Login/Registrati</a></li>
+					<li><a href="http://localhost/2.0/login.php">Login/Registrati</a></li>
 					<li><a href="http://localhost/2.0/cerca.php"> Cerca Problemi</a><li>
 				</ul>
 
@@ -56,7 +56,7 @@
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET','http://localhost/2.0/php/problemi.php');
 		xhr.onload=function(){
-			var arrProb =JSON.parse(xhr.responseText);
+			var arrProb =JSON.parse(this.responseText);
 			spawn(arrProb);
 		};
 		xhr.send();
@@ -69,55 +69,61 @@
 			var link = "";
 		// visualizzo i problemi
 			for(i=0; i< data.length; i++){
-				testo += "<div style='opacity:0.95; background: #f4f4f4; margin: auto; width:1000px; border-radius: 20px; text-align: center; color: #3b5998;   '><h1>"+data[i].titolo+ "</h1> <p id='p"+data[i].idProblema+"'> problema numero:"+data[i].idProblema+"</p> <button id='b"+data[i].idProblema+"' onclick=showP("+data[i].idProblema+")> Per saperne di più! </button></div> <br>";
+				testo += "<div style='opacity:0.95; background: #f4f4f4; margin: auto; width:1000px; border-radius: 20px; text-align: center; color: #3b5998;   '><h1>"+data[i].titolo+ "</h1> <p id='p"+data[i].idProblema+"'> problema numero:"+data[i].idProblema+"</p> <button id='b"+data[i].idProblema+"' onclick=showP("+data[i].idProblema+",formattazione)> Per saperne di più! </button></div> <br>";
 				//link  += "<button> Per saperne di più! </button>"
 			}
 			div.insertAdjacentHTML("beforeend",testo+link); //comando per inserire elementi nel dom
 		}
 
 		//funzione visualizzazione singolo problema
-		//******************************************************************
-		var f;
-		function showP(idP){
-			figli=div.getElementsByTagName("div");//.style.visibility = "hidden"; //nascondo gli altri problemi
-			for(i=0;i<figli.length;i++){
-				figli[i].style.visibility="hidden";
-			}
-			
-
-			//richiesta problema
-			function formattazione(data){
-				var problema =JSON.parse(data);
+//****************************************************************************************************
+		//funzione formattazione problema
+		function formattazione(prob){
 				var k;
 				var testo;
-				
-
-
+				var l = prob.tag.length;
+				var tag="";
+				var i=0;
+				while(l>i){
+					tag+= " "+prob.tag[i];
+					i++;
+				}
 				//Formattazione problema
-
-				if(problema.anonimo){
+				if(prob.anonimo){
 					k="l'utete ha deciso di effettuare la segnalazione in maniera anonima"
 				}
 				else{
-					k="l'utente che ha riportato il problema corrisponde al codice utente numero : "+problema.secretID
+					k="segnalazione effettuata dall'utente numero: "+prob.problema.secretID+".  Che corrisconde all'utente: FEFIFFO ";//+ut.Nome+" "+ut.Cognome;
 				}
-				testo="<div  class='stripe'> <p> ID problema : "+problema.idProblema+"</p> <div> <h1>"+problema.titolo+"</h1><br><p>"+problema.descrizione+"</p><br><p>"+k+"</p></div></div>"; //troppo hard coded? come torno indietro? basta cliccare su lla bara o devo mettere un pulsante? i commenti?
-				console.log(testo);
-				f= testo;
-
-
-
+			//	testo="<div  class='stripe'> <p> ID problema : "+prob.idProblema+"</p> <div> <h1>"+prob.titolo+"</h1><br><p>"+prob.descrizione+"</p><br><p>"+k+"</p><br><p><b>tag:</b> "+tag+"</p></div></div>"; //troppo hard coded? come torno indietro? basta cliccare sulla bara o devo mettere un pulsante? i commenti?
+			testo="<div  class='stripe'> <p> ID problema : "+prob.problema.idProblema+"</p> <div> <h1>"+prob.problema.titolo+"</h1><br><p>"+prob.problema.descrizione+"</p><br><p>"+k+"</p><br><p><b>tag:"+tag+"</b> </p></div></div>";
 				div.insertAdjacentHTML("afterbegin",testo);
-			}
-			xhr = new XMLHttpRequest();
-			xhr.open('POST','http://localhost/2.0/php/problema.php');
-			xhr.onload= function(){ formattazione(xhr.responseText)};
-			console.log(f);
-			
+			};
 
-			xhr.send(idP);
-		}
-//****************************************************************************************************		
+		//showP(idP,formattazione)
+		function showP(idP, formattazione){
+			
+			figli=div.getElementsByTagName("div");//.style.visibility = "hidden"; //nascondo gli altri problemi
+			for(i=0;i<figli.length;i++){
+				figli[i].style.visibility="hidden";
+			};
+
+
+			var xhr1 = new XMLHttpRequest();
+			xhr1.open('POST','http://localhost/2.0/php/problema.php');//uttente problema e tag nella stessa query
+			xhr1.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+						x=(JSON.parse(this.responseText));
+						formattazione(x);
+				}
+			};
+			xhr1.send(idP);
+
+		};
+
+
+
+//*****************************************************************************************************		
 
 
 

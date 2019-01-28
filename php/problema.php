@@ -12,17 +12,24 @@
     $ris2 = mysqli_query($conn, $query2);
     //inserisco i risultati delle due query in due array associativi necessari per mostrare il problema e recuperare le informazioni sull'utente se necessario
     $problema= mysqli_fetch_assoc($ris2);
+
 	//query per identificare l'utente
-	$query3 ="SELECT * FROM Utenti WHERE Utenti.secretID = ". $problemi ["secretID"].";"; //" SELECT Nome, Cognome FROM Utenti WHERE  Utenti.secretID =".$segnalazioni["secretID"];
+	$query3 ="SELECT * FROM Utenti WHERE Utenti.secretID = ". $problema ["secretID"].";"; //" SELECT Nome, Cognome FROM Utenti WHERE  Utenti.secretID =".$segnalazioni["secretID"];
     $ris3 = mysqli_query($conn, $query3);
-	$utenti = mysqli_fetch_assoc($ris3);
-    $_SESSION["secretID"] = $utenti["secretID"];
+    $utenti = mysqli_fetch_assoc($ris3);
     
 	
-	$qt = "SELECT descrizione FROM DizionarioTag WHERE idTag IN (SELECT idTag FROM tagBridge WHERE idProblema =".$problemi["idProblema"].");";
+	$qt = "SELECT descrizione FROM DizionarioTag WHERE idTag IN (SELECT idTag FROM tagBridge WHERE idProblema =".$problema["idProblema"].");";
 	$risqt = mysqli_query($conn, $qt);
-	$aTag = [];
-    $json=json_encode($problema);
-echo $json;
+    while($row = mysqli_fetch_assoc($risqt)){
+        $aTag[] = $row["descrizione"];
+    }
+    $array=array(
+        "problema" => $problema,
+        "utenti" => $utenti,
+        "tag" => $aTag
+    );
+    $json=json_encode($array);
+    echo $json;
 	
 ?>

@@ -1,12 +1,8 @@
-<?php
-//creo una sessione per rendere le operazioni meno "hardcoded"
-	session_start();	
-?>
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
 	<title>2.0</title>
+	<meta charset="utf-8" />
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	
@@ -29,9 +25,9 @@
 				</span>
 				<ul class="navbar-nav">
 					<li><a href="#">Home</a></li>
-					<li><a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></li>
+					<li><a href="http://localhost/2.0/problemi.php">Naviga Problemi</a></li>
 					<li><a href="http://localhost/2.0/report.php">Riporta Problema</a></li>
-					<li><a href="http://localhost/2.0/login.html">Login/Registrati</a></li>
+					<li><a href="http://localhost/2.0/login.php">Login/Registrati</a></li>
 					<li><a href="http://localhost/2.0/cerca.php"> Cerca Problemi</a><li>
 				</ul>
 
@@ -48,6 +44,7 @@
 
 		<!-- main body-->
 		<div class="stripe">
+			<button onclick="login()"></button>
 			<h1>BENVENUTO NEL PORTALE Problem Solver </h1>
 			<p> 
 				<b>
@@ -67,6 +64,18 @@
 	</div>
 
 	<script>
+				function login(){
+			xhr= new XMLHttpRequest();
+			xhr.open("GET", "http://localhost/2.0/php/autentication.php");
+			xhr.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					console.log(this.responseText);
+				}
+			};
+			xhr.send(); 
+		}
+
+
 			//script per aprire e chiudere il menù a scomparsa in modalità mobile
 		function openSlideMenu(){
 			document.getElementById("side-menu").style.width="250px"

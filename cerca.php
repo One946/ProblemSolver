@@ -33,9 +33,9 @@
 				</span>
 				<ul class="navbar-nav">
                 <li><a href="http://localhost/2.0/index.php"> Home</a><li>
-					<li><a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></li>
+					<li><a href="http://localhost/2.0/problemi.php">Naviga Problemi</a></li>
 					<li><a href="http://localhost/2.0/report.php">Riporta Problema</a></li>
-					<li><a href="http://localhost/2.0/login.html">Login/Registrati</a></li>
+					<li><a href="http://localhost/2.0/login.php">Login/Registrati</a></li>
                     <li><a href="http://localhost/2.0/cerca.php"> Cerca Problemi</a><li>
 				</ul>
 
