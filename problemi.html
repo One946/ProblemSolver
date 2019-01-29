@@ -95,8 +95,7 @@
 			var link = "";
 		// visualizzo i problemi
 			for(i=0; i< data.length; i++){
-				testo += "<div style='opacity:0.95; background: #f4f4f4; margin: auto; width:1000px; border-radius: 20px; text-align: center; color: #3b5998;   '><h1>"+data[i].titolo+ "</h1> <p id='p"+data[i].idProblema+"'> problema numero:"+data[i].idProblema+"</p> <button id='b"+data[i].idProblema+"' onclick=showP("+data[i].idProblema+",formattazione)> Per saperne di più! </button></div> <br>";
-				//link  += "<button> Per saperne di più! </button>"
+				testo += "<div style='opacity:0.95; background: #f4f4f4; margin: auto; width:1000px; border-radius: 20px; text-align: center; color: #3b5998;   '><h1>"+data[i].titolo+ "</h1> <p id='p"+data[i].idProblema+"'> problema numero:"+data[i].idProblema+"</p> <button id='b"+data[i].idProblema+"' onclick=showP("+data[i].idProblema+",formattazione,loadC)> Per saperne di più! </button></div> <br>";
 			}
 			div.insertAdjacentHTML("beforeend",testo+link); //comando per inserire elementi nel dom
 		}
@@ -104,7 +103,7 @@
 		//funzione visualizzazione singolo problema
 //****************************************************************************************************
 		//funzione formattazione problema
-		function formattazione(prob){
+		function formattazione(prob,comment){
 				var k;
 				var testo;
 				var l = prob.tag.length;
@@ -115,38 +114,65 @@
 					i++;
 				}
 				//Formattazione problema
-				if(prob.anonimo){
+				if(prob.problema.anonimo){
 					k="l'utete ha deciso di effettuare la segnalazione in maniera anonima"
 				}
 				else{
-					k="segnalazione effettuata dall'utente numero: "+prob.problema.secretID+".  Che corrisconde all'utente: FEFIFFO ";//+ut.Nome+" "+ut.Cognome;
+					k="segnalazione effettuata dall'utente numero: "+prob.problema.secretID+".  Che corrisconde all'utente: "+prob.utenti.Nome +" "+ prob.utenti.Cognome;
 				}
 			//	testo="<div  class='stripe'> <p> ID problema : "+prob.idProblema+"</p> <div> <h1>"+prob.titolo+"</h1><br><p>"+prob.descrizione+"</p><br><p>"+k+"</p><br><p><b>tag:</b> "+tag+"</p></div></div>"; //troppo hard coded? come torno indietro? basta cliccare sulla bara o devo mettere un pulsante? i commenti?
-			testo="<div  class='stripe'> <p> ID problema : "+prob.problema.idProblema+"</p> <div> <h1>"+prob.problema.titolo+"</h1><br><p>"+prob.problema.descrizione+"</p><br><p>"+k+"</p><br><p><b>tag:"+tag+"</b> </p></div></div>";
+			testo="<div  class='stripe'> <p> ID problema : "+prob.problema.idProblema+"</p> <div> <h1>"+prob.problema.titolo+"</h1><br><p>"+prob.problema.descrizione+"</p><br><p>"+k+"</p><br><p><b>tag:"+tag+"</b> </p><button id='commenta' style='background-color:#3b5998; color:white; border:none;margin-top:15px'>Commenta!</button></div></div>";
+			testo=testo+"<div class='stripe' style='margin-top:15px;' id='commenti'><h1>COMMENTI</h1></div>";	
 				div.insertAdjacentHTML("afterbegin",testo);
-			};
+				var x =document.getElementById("commenta");
+				x.addEventListener("click",console.log("inserisci un commento")); //commenta subito PERCHE'?
+		};
 
 		//showP(idP,formattazione)
-		function showP(idP, formattazione){
+		function showP(idP, formattazione,loadC,comment){
 			
-			figli=div.getElementsByTagName("div");//.style.visibility = "hidden"; //nascondo gli altri problemi
+			figli=div.getElementsByTagName("div");//nascondo gli altri problemi
 			for(i=0;i<figli.length;i++){
 				figli[i].style.visibility="hidden";
 			};
-
-
 			var xhr1 = new XMLHttpRequest();
 			xhr1.open('POST','http://localhost/2.0/php/problema.php');//uttente problema e tag nella stessa query
 			xhr1.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
-						x=(JSON.parse(this.responseText));
-						formattazione(x);
+						payload1=(JSON.parse(this.responseText)); //payload contenente il problema
+						var xhr2 = new XMLHttpRequest();
+						xhr2.open("POST","http://localhost/2.0/php/commenti.php");
+						xhr2.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+							var payload2;//payload contenente i commenti
+							payload2 = JSON.parse(this.responseText)
+	
+							formattazione(payload1);
+							loadC(payload2);
+							}
+						}
+						xhr2.send(parseInt(idP));
+						scroll(0,0)
 				}
 			};
 			xhr1.send(idP);
 
 		};
 
+		//funzione carica commenti
+		function loadC(array){
+			var commenti= document.getElementById("commenti");
+			array.forEach(element => {
+				commento="<div style='opacity:0.95; background: #f4f4f4; margin: auto; width:1000px; border-radius: 20px; text-align: center; color: #3b5998;'>";
+				commento=commento+"<h3>idCommento: "+element.idCommento+"<p>"+element.descrizione+"</p>";
+				commenti.insertAdjacentHTML("beforeend",commento);
+			});
+		}
+
+		//funzione inserimento commento
+		function comment(){
+
+		}
 
 
 //*****************************************************************************************************		
