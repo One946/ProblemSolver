@@ -1,7 +1,6 @@
 <?php
     require("config/db.php");
-    session_start();
-
+    require("config/config.php");
     //prendo le variabili che mi arrivano tramite richiesta HTTP
     $data = file_get_contents("php://input"); //normalmente php non può leggere nella post le variabili json per tanto devo andarle a cercare nel corpo della richiesta
     $x=json_decode($data, true);
@@ -16,6 +15,7 @@
     //$anonimo= mysqli_real_escape_string($conn,$_REQUEST["anonimo"]); non mi serve usare l'escape perchè sovrascrivo la variabile
     $categoria = $x["categoria"];
     $ubicazione = $x["ubicazione"];
+    $secretID= $x["secretID"];
 
     if ($anonimo == "true"){
         $anonimo = 1;
@@ -53,7 +53,7 @@ if(mysqli_query($conn, $qIU)){
     //la variabile secretID viene presa dalla sessione dell'utente che ha effettuato il login
     //query di inserimento problema nel db
     //$qProb= "INSERT INTO Problemi (secretID, boolAnonimo, idUbicazione, idCategoria, descrizione, titolo) VALUES (".$_SESSION["secretID"].", ".$anonimo.", ".$idUbicazione["idUbicazione"].",".$cate["idCategoria"]." , '".$descrizione."', '".$titolo."')" ;
-    $qProb= "INSERT INTO Problemi (secretID, boolAnonimo, idUbicazione, idCategoria, descrizione, titolo) VALUES (789, ".$anonimo.", ".$idUbicazione["idUbicazione"].",".$cate["idCategoria"]." , '".$descrizione."', '".$titolo."')" ;
+    $qProb= "INSERT INTO Problemi (secretID, boolAnonimo, idUbicazione, idCategoria, descrizione, titolo) VALUES (".$secretID.", ".$anonimo.", ".$idUbicazione["idUbicazione"].",".$cate["idCategoria"]." , '".$descrizione."', '".$titolo."')" ;
 
    
     if (mysqli_query($conn, $qProb)) { //se la query va a buon fine eseguo la queri per ottenere l'id del problema creato che viene creato in automatico tramite l'auto increment
@@ -99,7 +99,7 @@ if(mysqli_query($conn, $qIU)){
         }
     
     } 
-    
-    mysqli_close($conn);
+   
+mysqli_close($conn);
 
 ?>

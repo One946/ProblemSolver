@@ -13,6 +13,7 @@
 
 	<div class="container">
 		<!-- navbar -->
+
 			<nav class="navbar">
 				<span class="open-slide">
 					<a href="#" onclick="openSlideMenu()">
@@ -25,11 +26,37 @@
 				</span>
 				<ul class="navbar-nav">
 					<li><a href="#">Home</a></li>
-					<li><a href="http://localhost/2.0/problemi.php">Naviga Problemi</a></li>
-					<li><a href="http://localhost/2.0/report.php">Riporta Problema</a></li>
-					<li><a href="http://localhost/2.0/login.php">Login/Registrati</a></li>
-					<li><a href="http://localhost/2.0/cerca.php"> Cerca Problemi</a><li>
+					<li><a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></li>
+					<li><a href="http://localhost/2.0/report.html">Riporta Problema</a></li>
+					<li><a href="http://localhost/2.0/login.html">Login/Registrati</a></li>
+					<li><a href="http://localhost/2.0/cerca.html"> Cerca Problemi</a><li>
+					<button id="p"style="background-color:#3b5998; color:white; border:none;margin-top:15px;">LogOut</button>
 				</ul>
+				<script>
+					//verifico se l'utente è loggato
+					var logged = document.cookie.substring(document.cookie.indexOf("secretID:"),document.cookie.indexOf(";"));
+					var a = logged.split("=");
+					var id = parseInt(a[1]);
+					if(!isNaN(id)){
+						document.getElementById("p").style.visibility="visibile";
+					}else{
+						document.getElementById("p").style.visibility="hidden";
+					}
+
+
+					document.getElementById("p").addEventListener("click",logout);
+					//funzione di logout
+				function logout(){
+					var d = new Date();
+  					d.setTime(d.getTime() *0);
+  					var expires = "expires="+ d.toUTCString();
+					  console.log(document.cookie);
+					  console.log(document.cookie["secretID"]);
+  					//document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+					document.cookie="secretID"+"="+document.cookie+";"+expires+"path=/"
+					console.log(document.cookie);
+				}
+				</script>
 
 			</nav>
 		<!--Menu a scomparsa-->
@@ -44,7 +71,6 @@
 
 		<!-- main body-->
 		<div class="stripe">
-			<button onclick="login()"></button>
 			<h1>BENVENUTO NEL PORTALE Problem Solver </h1>
 			<p> 
 				<b>
@@ -56,24 +82,13 @@
 				
 		<!-- footer-->
 		<div class="footer">
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			</p>
+			<p><b>
+				Se non acconsenti all'utilizzo dei cookies non potrai segnalare problemi o commentarli ma solo prenderne visione
+			</b></p>
 		</div>
 	</div>
 
 	<script>
-				function login(){
-			xhr= new XMLHttpRequest();
-			xhr.open("GET", "http://localhost/2.0/php/autentication.php");
-			xhr.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {
-					console.log(this.responseText);
-				}
-			};
-			xhr.send(); 
-		}
 
 
 			//script per aprire e chiudere il menù a scomparsa in modalità mobile

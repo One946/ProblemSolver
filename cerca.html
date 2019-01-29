@@ -1,12 +1,3 @@
-<?php
-//creo una sessione per rendere le operazioni meno "hardcoded"
-    session_start();    /*
-    require("config/db.php");
-    require("config/config.php");
-    $q= "SELECT * FROM Categorie WHERE 1";
-    $ris=mysqli_query($conn,$q);*/
-?>
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -32,12 +23,38 @@
 					</a>
 				</span>
 				<ul class="navbar-nav">
-                <li><a href="http://localhost/2.0/index.php"> Home</a><li>
-					<li><a href="http://localhost/2.0/problemi.php">Naviga Problemi</a></li>
-					<li><a href="http://localhost/2.0/report.php">Riporta Problema</a></li>
-					<li><a href="http://localhost/2.0/login.php">Login/Registrati</a></li>
-                    <li><a href="http://localhost/2.0/cerca.php"> Cerca Problemi</a><li>
-				</ul>
+                    <li><a href="http://localhost/2.0/index.html"> Home</a><li>
+					<li><a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></li>
+					<li><a href="http://localhost/2.0/report.html">Riporta Problema</a></li>
+					<li><a href="http://localhost/2.0/login.html">Login/Registrati</a></li>
+                    <li><a href="http://localhost/2.0/cerca.html"> Cerca Problemi</a><li>
+                    <button id="p"style="background-color:#3b5998; color:white; border:none;margin-top:15px;">LogOut</button>
+                </ul>
+                    <script>
+                        //verifico se l'utente è loggato
+                        var logged = document.cookie.substring(document.cookie.indexOf("secretID:"),document.cookie.indexOf(";"));
+                        var a = logged.split("=");
+                        var id = parseInt(a[1]);
+                        if(!isNaN(id)){
+                            document.getElementById("p").style.visibility="visibile";
+                        }else{
+                            document.getElementById("p").style.visibility="hidden";
+                        }
+    
+    
+                        document.getElementById("p").addEventListener("click",logout);
+                        //funzione di logout
+                    function logout(){
+                        var d = new Date();
+                          d.setTime(d.getTime() *0);
+                          var expires = "expires="+ d.toUTCString();
+                          console.log(document.cookie);
+                          console.log(document.cookie["secretID"]);
+                          //document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+                        document.cookie="secretID"+"="+document.cookie+";"+expires+"path=/"
+                        console.log(document.cookie);
+                    }
+                    </script>
 
 			</nav>
 		<!--Menu a scomparsa-->
@@ -69,15 +86,7 @@
         <form method="POST" action="cercaCategoria.php">
             <label for="cerca"> <b>Cerca problemi per categoria categoria </b> </label><br>
             <select type="text" id="categoria" name="categoria" class="categoria" required>
-                <?php  
-                        $i=0;
-                        $categorie= mysqli_fetch_all($ris,MYSQLI_ASSOC);
-                        while($i<count($categorie)){
-                            echo'<option value="'.$categorie[$i]['descrizione'].'">'.$categorie[$i]['descrizione']."</option>";
-                            $i++;
-                        }
-                        $i=0;
-                ?>
+
             </select>
             <button id="4">Cerca!</button>
         </form>

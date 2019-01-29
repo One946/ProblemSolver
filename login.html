@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>2.0</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<link rel="stylesheet" type="text/css" href="http://localhost/2.0/css/main.css">
+</head>
+<body>
+	
+
+	<div class="container">
+		<!--NAVBAR-->
+		<nav class="navbar">
+				<span class="open-slide">
+					<a href="#" onclick="openSlideMenu()">
+						<svg width="30" height="30">
+							<path d = "M0,5 30,5" stroke="#fff" stroke-width="5"/>
+							<path d = "M0,14 30,14" stroke="#fff" stroke-width="5"/>
+							<path d = "M0,23 30,23" stroke="#fff" stroke-width="5"/>
+						</svg>
+					</a>
+				</span>
+				<ul class="navbar-nav">
+                    <li><a href="http://localhost/2.0/index.html">Home</a></li>
+                    <li><a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></li>
+                    <li><a href="http://localhost/2.0/report.html">Riporta Problema</a></li>
+                    <li><a href="#">Login/Registrati</a></li>
+					<li><a href="http://localhost/2.0/cerca.html"> Cerca Problemi</a><li>
+					<button id="p"style="background-color:#3b5998; color:white; border:none;margin-top:15px;">LogOut</button>
+				</ul>
+					<script>
+						//verifico se l'utente è loggato
+						var logged = document.cookie.substring(document.cookie.indexOf("secretID:"),document.cookie.indexOf(";"));
+						var a = logged.split("=");
+						var id = parseInt(a[1]);
+						if(!isNaN(id)){
+							document.getElementById("p").style.visibility="visibile";
+						}else{
+							document.getElementById("p").style.visibility="hidden";
+						}
+	
+	
+						document.getElementById("p").addEventListener("click",logout);
+						//funzione di logout
+					function logout(){
+						var d = new Date();
+							d.setTime(d.getTime() *0);
+							var expires = "expires="+ d.toUTCString();
+							console.log(document.cookie);
+							console.log(document.cookie["secretID"]);
+							//document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+						document.cookie="secretID"+"="+document.cookie+";"+expires+"path=/"
+						console.log(document.cookie);
+					}
+					</script>
+		</nav>
+
+		<!--Menu a scomparsa-->
+		<div id="side-menu" class="side-nav">
+				<a href="#" class="btn-close" onclick="closeSlideMenu()">&times;</a>
+				<a href="http://localhost/2.0/index.html">Home</a>
+				<a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></a>
+				<a href="http://localhost/2.0/report.html">Riporta Problema</a>
+				<a href="#">Login/Registrati</a>
+				<li><a href="http://localhost/2.0/cerca.html"> Cerca Problemi</a><li>
+		</div>
+
+		<!-- main body-->
+		<div id="benvenuto" class="stripe" style="visibility:hidden"></div>	
+		<div class="logincontainer">
+			<img src="http://localhost/2.0/logocomune.png" class="logo">
+			<form id="form">
+				<label for="email"><b>email</b></label>
+				<input type="text" id="email" placeholder="email@email.com" required>
+				<label for="password"><b>Password</b></label>
+				<input type="password" id="password" placeholder="Password" required>
+				<button id="submit"> login </button>
+				<p><a href="http://localhost/2.0/registrati.html">Non sei ancora registrato? Registrati.</a></p>
+			</form>
+		</div>
+
+	
+
+
+
+		<!-- footer-->
+		<div class="footer">
+			<p><b>
+				Se non acconsenti all'utilizzo dei cookies non potrai segnalare problemi o commentarli ma solo prenderne visione
+			</b></p>
+		</div>
+	
+
+
+
+	</div>
+	<script>	
+
+
+
+
+		document.getElementById("form").addEventListener("submit", login);
+		var form= document.getElementById("form");
+		var benvenuto = document.getElementById("benvenuto");
+
+		//funzione di login
+		function login(e){
+			e.preventDefault();
+			var email = document.getElementById("email").value;
+			var password = document.getElementById("password").value;
+			var payload={
+				email,
+				password
+			};
+
+			form.style.visibility="hidden";
+			benvenuto.style.visibility="visible";
+
+			var x = JSON.stringify(payload);
+			xhr= new XMLHttpRequest();
+			xhr.open("POST", "http://localhost/2.0/php/autentication.php");
+			xhr.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var utente=JSON.parse(this.responseText);
+					console.log(utente.Nome);
+					testo="<h1>Benvenuto "+utente.Nome+" "+utente.Cognome+" </h1><br> <p>Adesso sei autenticato e puoi correttamente segnalare o commentare un problema  </p>";
+					benvenuto.insertAdjacentHTML("afterbegin",testo);
+					document.cookie= "secretID="+" "+utente.secretID;
+					var logged = document.cookie.substring(document.cookie.indexOf("secretID:"),document.cookie.indexOf(";"));
+					var a = logged.split("=");
+					var id = parseInt(a[1]);
+					console.log(id);
+				}
+			};
+			xhr.send(x); 
+		}
+
+
+
+			function openSlideMenu(){
+				document.getElementById("side-menu").style.width="250px"
+				document.getElementById("main.").style.marginLeft="250px"
+			}
+			function closeSlideMenu(){
+				document.getElementById("side-menu").style.width="0px"
+				document.getElementById("main.").style.marginLeft="0px"
+			}
+	</script>
+</body>
+</html>

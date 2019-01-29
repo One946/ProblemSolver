@@ -24,22 +24,48 @@
                 </a>
             </span>
             <ul class="navbar-nav">
-                <li><a href="http://localhost/2.0/index.php">Home</a></li>
-                <li><a href="http://localhost/2.0/problemi.php">Naviga Problemi</a></li>
+                <li><a href="http://localhost/2.0/index.html">Home</a></li>
+                <li><a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></li>
                 <li><a href="#">Riporta Problema</a></li>
-                <li><a href="http://localhost/2.0/login.php">Login/Registrati</a></li>
-                <li><a href="http://localhost/2.0/cerca.php"> Cerca Problemi</a><li>
+                <li><a href="http://localhost/2.0/login.html">Login/Registrati</a></li>
+                <li><a href="http://localhost/2.0/cerca.html"> Cerca Problemi</a><li>
+                <button id="p"style="background-color:#3b5998; color:white; border:none;margin-top:15px;">LogOut</button>
             </ul>
+                <script>
+                    //verifico se l'utente è loggato
+                    var logged = document.cookie.substring(document.cookie.indexOf("secretID:"),document.cookie.indexOf(";"));
+                    var a = logged.split("=");
+                    var id = parseInt(a[1]);
+                    if(!isNaN(id)){
+                        document.getElementById("p").style.visibility="visibile";
+                    }else{
+                        document.getElementById("p").style.visibility="hidden";
+                    }
+
+
+                    document.getElementById("p").addEventListener("click",logout);
+                    //funzione di logout
+                function logout(){
+                    var d = new Date();
+                        d.setTime(d.getTime() *0);
+                        var expires = "expires="+ d.toUTCString();
+                        console.log(document.cookie);
+                        console.log(document.cookie["secretID"]);
+                        //document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+                    document.cookie="secretID"+"="+document.cookie+";"+expires+"path=/"
+                    console.log(document.cookie);
+                }
+                </script>
 
             </nav>
         <!--Menu a scomparsa-->
             <div id="side-menu" class="side-nav">
                 <a href="#" class="btn-close" onclick="closeSlideMenu()">&times;</a>
-                <a href="http://localhost/2.0/index.php">Home</a>
-                <a href="http://localhost/2.0/problemi.php">Naviga Problemi</a></a>
+                <a href="http://localhost/2.0/index.html">Home</a>
+                <a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></a>
                 <a href="#">Riporta Problema</a>
-                <a href="http://localhost/2.0/login.php">Login/Registrati</a>
-                <li><a href="http://localhost/2.0/cerca.php"> Cerca Problemi</a><li>
+                <a href="http://localhost/2.0/login.html">Login/Registrati</a>
+                <li><a href="http://localhost/2.0/cerca.html"> Cerca Problemi</a><li>
             </div>
     </div>
 
@@ -107,6 +133,7 @@
                anonimo: document.getElementById("anonimo").checked,
                categoria: document.getElementById("categoria").value,
                 ubicazione: document.getElementById("ubicazione").value,
+                secretID:id
            };
            return problema;
        }
@@ -114,17 +141,19 @@
 //invio del problema
     submit = document.getElementById("form").addEventListener("submit", sendProb);
     function sendProb(e){
-        e.preventDefault()
-        var problema = crtJson();
-        problema = JSON.stringify(problema);
-        //console.log(problema);
-        var post = new XMLHttpRequest();
-        post.open("POST","http://localhost/2.0/php/insert.php");
-        post.setRequestHeader('Content-Type', 'application/json')
-        post.onload= function(){
-            //console.log(post.responseText);
-        };
-        post.send(problema);
+        if(!isNaN(id)){
+            e.preventDefault()
+            var problema = crtJson();
+            problema = JSON.stringify(problema);
+            console.log(problema);
+            var post = new XMLHttpRequest();
+            post.open("POST","http://localhost/2.0/php/insert.php");
+            post.setRequestHeader('Content-Type', 'application/json')
+            post.onload= function(){
+                alert("il problema è stato segnalato correttamente");
+            };
+            post.send(problema);
+        }
        }
    
    

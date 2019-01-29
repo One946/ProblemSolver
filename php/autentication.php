@@ -8,22 +8,17 @@
     $data=file_get_contents("php://input"); //normalmente php non può leggere nella post le variabili json per tanto devo andarle a cercare nel corpo della richiesta
     $x=json_decode($data, true);
 
-    $verifica="SELECT * FROM Utenti WHERE email = '{$x['email']}'";//" && password = MD5('{$x['password']}')";  
+    //$verifica="SELECT * FROM Utenti WHERE email = '{$x['email']}' && password = MD5('{$x['password']}')";
+    $verifica="SELECT * FROM Utenti WHERE email = '{$x['email']}' && password ='{$x['password']}'";   //DEBUG
     $a=mysqli_query($conn, $verifica);
-//    if($a){
+    if($a){
+        
         $utente=mysqli_fetch_assoc($a);
-        $_SESSION["secretID"] = $utente['secretID'];
-        echo($_SESSION["secretID"]);
-//        var_dump($utente);
-//    }
-    
-//    $benvenuto="Bentornato ".$utente["Nome"]." ".$utente["Cognome"];
-//    $post= "SELECT COUNT(idProblema) AS NumPost FROM Problemi WHERE secretID = '".$utente["secretID"]."'";
-//    $f = mysqli_query($conn, $post);
-//    $numpost= mysqli_fetch_assoc($f);
-//    $pp="Hai effettuato ".$numpost["NumPost"]." post";
-    
-    
-   // $_SESSION["secretID"] = $utente['secretID'];
-   
+        //$_SESSION["secretID"] = $utente['secretID'];
+        $utente = json_encode($utente);
+        echo($utente);
+    }
+    else{
+        echo("errore di autenticazione");
+    }
 ?>

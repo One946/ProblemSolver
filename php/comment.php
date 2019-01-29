@@ -1,6 +1,7 @@
 <?php
     require("config/config.php");
     require("config/db.php");
+    session_start();
     $request_body = file_get_contents('php://input'); //sto passando dati tramite il body http invece che direttamente dal form pertanto devo utilizzare questa funzione per accedere al contenuto
     $data = json_decode($request_body,true); //dopo semplicemente  eseguo un decode per inserire i dati in un array il parametro true serve a far si che vengano effettivamente inseriti in un array
     //preparazione variabili per inserimento nel db
