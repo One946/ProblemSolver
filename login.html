@@ -70,7 +70,7 @@
 		<!-- main body-->
 		<div id="benvenuto" class="stripe" style="visibility:hidden"></div>	
 		<div class="logincontainer">
-			<img src="http://localhost/2.0/logocomune.png" class="logo">
+			<img src="http://localhost/2.0/logocomune.png" class="logo" id="logo">
 			<form id="form">
 				<label for="email"><b>email</b></label>
 				<input type="text" id="email" placeholder="email@email.com" required>
@@ -132,6 +132,7 @@
 					var a = logged.split("=");
 					var id = parseInt(a[1]);
 					console.log(id);
+					document.getElementById("logo").style.visibility="hidden";
 				}
 			};
 			xhr.send(x); 

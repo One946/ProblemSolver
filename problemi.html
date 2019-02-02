@@ -7,6 +7,9 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	
 	<link rel="stylesheet" type="text/css" href="http://localhost/2.0/css/main.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+		
 </head>
 <body class="parallax">
 		<!-- navbar -->
@@ -66,121 +69,227 @@
 					<a href="#">Riporta Problema</a>
 					<a href="#">Login/Registrati</a>
 			</div>
-
-			<div id="problemi"></div>
 			<div id="problema"></div>
+			<div id= "divCommenti"></div>
+			<div id="problemi"></div>
+
 
 
 
 
 	<script>
 		//selezione il div padre che conterrà tutti i problemi
-		var div= document.getElementById("problemi");//div contine l'anteprima di tutti i problemi
-		var div2= document.getElementById("problema");//div2 contiene il singolo problema
+		//var div= document.getElementById("problemi");//div contine l'anteprima di tutti i problemi
+		//var div2= document.getElementById("problema");//div2 contiene il singolo problema
 
 		//invio la richiesta per richiedere i problemi
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET','http://localhost/2.0/php/problemi.php');
 		xhr.onload=function(){
 			var arrProb =JSON.parse(this.responseText);
-			spawn(arrProb);
+			spawnProb(arrProb);
 		};
-		xhr.send();
+        xhr.send();
+
 	
 
 
 		// funzione di visualizzazione problemi
-		function spawn(data){
-			var testo= "";
-			var link = "";
+		function spawnProb(data){
 		// visualizzo i problemi
 			for(i=0; i< data.length; i++){
-				testo += "<div style='opacity:0.95; background: #f4f4f4; margin: auto; width:1000px; border-radius: 20px; text-align: center; color: #3b5998;   '><h1>"+data[i].titolo+ "</h1> <p id='p"+data[i].idProblema+"'> problema numero:"+data[i].idProblema+"</p> <button id='b"+data[i].idProblema+"' onclick=showP("+data[i].idProblema+",formattazione,loadC)> Per saperne di più! </button></div> <br>";
+                var div;
+                var h1;
+                var p;
+                var button;
+                var testo;
+                
+                div=document.createElement("div");
+                div.setAttribute("id", "probContainer");
+                h1=document.createElement("h1");
+                h1.setAttribute("id","titolo");
+                p=document.createElement("p");
+                p.setAttribute("id","descrizione");
+                button=document.createElement("button");
+
+                button.setAttribute("id","b"+data[i].idProblema);
+                div.style.background="#f4f4f4";
+                div.style.opacity="0.95";
+                div.style.width="1000px"
+                div.style.borderRadius="20px";
+                div.style.color="#3b5998";
+                div.style.margin="auto";
+                div.style.textAlign="center";
+
+                document.getElementById("problemi").appendChild(div);
+                h1.innerHTML=data[i].titolo;
+                p.innerHTML=data[i].descrizione;
+                button.innerHTML="Persaperne di più"
+                button.addEventListener("click",singoloProblema);
+
+                div.appendChild(h1);
+                div.appendChild(p);
+                div.appendChild(button);
 			}
-			div.insertAdjacentHTML("beforeend",testo+link); //comando per inserire elementi nel dom
+
 		}
 
-		//funzione visualizzazione singolo problema
-//****************************************************************************************************
-		//funzione formattazione problema
-		function formattazione(prob,comment){
-				var k;
-				var testo;
-				var l = prob.tag.length;
-				var tag="";
-				var i=0;
-				while(l>i){
-					tag+= " "+prob.tag[i];
-					i++;
-				}
-				//Formattazione problema
-				if(prob.problema.anonimo){
-					k="l'utete ha deciso di effettuare la segnalazione in maniera anonima"
-				}
-				else{
-					k="segnalazione effettuata dall'utente numero: "+prob.problema.secretID+".  Che corrisconde all'utente: "+prob.utenti.Nome +" "+ prob.utenti.Cognome;
-				}
-			//	testo="<div  class='stripe'> <p> ID problema : "+prob.idProblema+"</p> <div> <h1>"+prob.titolo+"</h1><br><p>"+prob.descrizione+"</p><br><p>"+k+"</p><br><p><b>tag:</b> "+tag+"</p></div></div>"; //troppo hard coded? come torno indietro? basta cliccare sulla bara o devo mettere un pulsante? i commenti?
-			testo="<div  class='stripe'> <p> ID problema : "+prob.problema.idProblema+"</p> <div> <h1>"+prob.problema.titolo+"</h1><br><p>"+prob.problema.descrizione+"</p><br><p>"+k+"</p><br><p><b>tag:"+tag+"</b> </p><button id='commenta' style='background-color:#3b5998; color:white; border:none;margin-top:15px'>Commenta!</button></div></div>";
-			testo=testo+"<div class='stripe' style='margin-top:15px;' id='commenti'><h1>COMMENTI</h1></div>";	
-				div.insertAdjacentHTML("afterbegin",testo);
-				var x =document.getElementById("commenta");
-				x.addEventListener("click",console.log("inserisci un commento")); //commenta subito PERCHE'?
-		};
-
-		//showP(idP,formattazione)
-		function showP(idP, formattazione,loadC,comment){
-			
-			figli=div.getElementsByTagName("div");//nascondo gli altri problemi
+        //funzione visualizzazione singolo problema
+        function singoloProblema(e){
+            idProblema=parseInt(e.target.id.substring(1));
+            figli = document.getElementById("problemi").getElementsByTagName("div");//nascondo gli altri problemi
 			for(i=0;i<figli.length;i++){
-				figli[i].style.visibility="hidden";
-			};
-			var xhr1 = new XMLHttpRequest();
+                figli[i].style.visibility="hidden";
+            };
+            console.log(idProblema)
+            var xhr1 = new XMLHttpRequest();
 			xhr1.open('POST','http://localhost/2.0/php/problema.php');//uttente problema e tag nella stessa query
 			xhr1.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
-						payload1=(JSON.parse(this.responseText)); //payload contenente il problema
-						var xhr2 = new XMLHttpRequest();
-						xhr2.open("POST","http://localhost/2.0/php/commenti.php");
-						xhr2.onreadystatechange = function() {
-						if (this.readyState == 4 && this.status == 200) {
-							var payload2;//payload contenente i commenti
-							payload2 = JSON.parse(this.responseText)
-	
-							formattazione(payload1);
-							loadC(payload2);
-							}
-						}
-						xhr2.send(parseInt(idP));
-						scroll(0,0)
+                    payload1=(JSON.parse(this.responseText)); //payload contenente il problema
+
+                            formattazione(payload1,showCommenti,inserisciCommento)
+                            showCommenti(idProblema)   
+                }
+            }
+            xhr1.send(idProblema);
+           
+            //funzione che da la struttura al singolo problema
+            function formattazione(payload1,showCommenti,inserisciCommento){
+                scroll(0,0);//torno in cima alla pagina per visualizzare il problema
+                //selezione il div che conterrà il problema
+                var divProblema = document.getElementById("problema");
+                divProblema.className="stripe";
+                divProblema.style.visibility="visibile";
+                //titolo del problema
+				var idP=document.createElement("small");
+				idP.setAttribute("id","idp");
+				divProblema.appendChild(idP);
+				idP.innerHTML= payload1.problema.idProblema;
+                var titolo = document.createElement("h1");
+                titolo.setAttribute("id", "titolo");
+                divProblema.appendChild(titolo);
+                titolo.innerHTML=payload1.problema.titolo;
+               //descrizione del problema 
+                var descrizione = document.createElement("p");
+                descrizione.setAttribute("id", "descrizione");
+                divProblema.appendChild(descrizione);
+                if(payload1.problema.anonimo){
+					k="<br><i>l'utete ha deciso di effettuare la segnalazione in maniera anonima</i>"
 				}
-			};
-			xhr1.send(idP);
+				else{
+					k="<br><br><small><i>segnalazione effettuata dall'utente numero: "+payload1.problema.secretID+".  Che corrisconde all'utente: "+payload1.utenti.Nome +" "+ payload1.utenti.Cognome+"</i></small>";
+				}
+                descrizione.innerHTML=payload1.problema.descrizione+k; //il valore di k cambio al cambiare della volontà dell'utente di rimanere anonimo o no
 
-		};
+                //TAG
+                var l = payload1.tag.length;
+				var tag="";
+				var i=0;
+				while(l>i){
+					tag+= " "+payload1.tag[i];
+					i++;
+                }
+                descrizione.innerHTML+="<br><br><b> TAG : </b> "+ tag;
+                
+                //creo la textarea per l'inserimento del commento
+                txt=document.createElement("TEXTAREA");
+                txt.setAttribute("id", "txt");
+                txt.maxLength = "3000";
+                txt.cols = "80";
+                txt.rows = "10";
+                divProblema.appendChild(txt);
+                //creo il bottone per inviare il commento
+                var commenta =document.createElement("button");
+				commenta.setAttribute("id", "commenta");
+				commenta.innerHTML="commenta!";
+				commenta.style.backgroundColor="#3b5998";
+				commenta.style.color="white";
+				commenta.style.margin="none";
+                commenta.style.marginTop="15px";
+                divProblema.appendChild(commenta);
 
-		//funzione carica commenti
-		function loadC(array){
-			var commenti= document.getElementById("commenti");
-			array.forEach(element => {
-				commento="<div style='opacity:0.95; background: #f4f4f4; margin: auto; width:1000px; border-radius: 20px; text-align: center; color: #3b5998;'>";
-				commento=commento+"<h3>idCommento: "+element.idCommento+"<p>"+element.descrizione+"</p>";
-				commenti.insertAdjacentHTML("beforeend",commento);
-			});
-		}
 
-		//funzione inserimento commento
-		function comment(){
+                commenta.addEventListener("click",inserisciCommento);
+            }
 
-		}
+            //funzione che mostra i commenti
+            function showCommenti(idProblema){
+				var divCommenti = document.getElementById("divCommenti");
+				divCommenti.style.marginTop="15px";
+				divCommenti.className="stripe";
+				divCommenti.innerHTML="<h1> COMMENTI </h1>";
 
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST","http://localhost/2.0/php/commenti.php");
+				xhr.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+							aCommenti=(JSON.parse(this.responseText));
+
+							for(i=0;i<aCommenti.commenti.length;i++){
+								var divCom = document.createElement("div");
+								divCom.setAttribute("id","divCom");
+								divCommenti.appendChild(divCom);
+								divCom.style.opacity="0.95";
+								divCom.style.background="#f4f4f4";
+								divCom.style.margin="auto";
+								divCom.style.width="1000px"
+								divCom.style.borderRadius="25px";
+								divCom.style.textAlign="center";
+								divCom.style.color="#3b5998";
+
+								var intCommento=document.createElement("h3");//INTESTAZIONE COMMENTO
+								intCommento.style.color="#3b5998";
+								intCommento.innerHTML="Commeto numero: "+aCommenti.commenti[i].idCommento
+								var autore = document.createElement("p");
+
+								for(j=0;j<aCommenti.utenti.length; j++){
+									if(aCommenti.commenti[i].secretID=aCommenti.utenti[j].secretID){
+									autore.innerHTML=aCommenti.utenti[j].Nome+" "+aCommenti.utenti[j].Cognome +" :";
+									}
+								}
+								
+								divCommenti.appendChild(intCommento);
+								divCommenti.appendChild(autore);
+								var descrizione=document.createElement("p");
+								descrizione.setAttribute("id","descrizioneCommento");
+								descrizione.innerHTML=aCommenti.commenti[i].descrizione;
+								divCommenti.appendChild(descrizione);
+							};
+						}
+				};
+				xhr.send(idProblema)
+            }
+
+
+            function inserisciCommento(){
+				if(!isNaN(id)){
+                    var commento={
+						descrizione: document.getElementById("txt").value,
+						secretID: id,
+						idProblema:parseInt(document.getElementById("idp").innerHTML) 
+					};
+					if(commento.descrizione===""||commento.descrizione===" "){
+						alert("non puoi lasciare un commento vuoto!");
+					}
+					else{
+						var xhr = new XMLHttpRequest();
+						xhr.open("POST","http://localhost/2.0/php/comment.php");
+						xhr.onreadystatechange = function() {
+							if (this.readyState == 4 && this.status == 200) {
+								alert(this.responseText);
+							}
+						};
+						xhr.send(JSON.stringify(commento));
+						showCommenti(commento.idProblema);
+					}
+				}
+            }
+            
+            
+        };
 
 //*****************************************************************************************************		
-
-
-
-
-
 
 
 

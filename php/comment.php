@@ -1,24 +1,26 @@
 <?php
     require("config/config.php");
     require("config/db.php");
-    session_start();
-    $request_body = file_get_contents('php://input'); //sto passando dati tramite il body http invece che direttamente dal form pertanto devo utilizzare questa funzione per accedere al contenuto
-    $data = json_decode($request_body,true); //dopo semplicemente  eseguo un decode per inserire i dati in un array il parametro true serve a far si che vengano effettivamente inseriti in un array
-    //preparazione variabili per inserimento nel db
-    $commento = $data["commento"];
-    $secretId = $data["secretIdUtente"];
-    $idProblema = $data["idProblema"];
-    
+    $data = file_get_contents('php://input'); //sto passando dati tramite il body http invece che direttamente dal form pertanto devo utilizzare questa funzione per accedere al contenuto
+    $x = json_decode($data,true); //dopo semplicemente  eseguo un decode per inserire i dati in un array il parametro true serve a far si che vengano effettivamente inseriti in un array
+
+    $commento = $x["descrizione"];
+    $secretID = $x["secretID"];
+    $idProblema = $x["idProblema"];
+
     //controllo se il commento è una riga vuota
+    
     if($commento === " "){
-        echo"non puoi inserire un commento vuoto";
+        echo"ERRORE COMMENTO VUOTO";
         mysqli_close($conn);
     }
+    
     //inserisco il commento nel db
-    $qCom = "INSERT INTO Commenti (secretId, idProblema, descrizione, boolVisibile) VALUES ('$secretId', '$idProblema', '$commento', 1) ";
+    $qCom = "INSERT INTO Commenti (secretId, idProblema, descrizione, boolVisibile) VALUES ('$secretID', '$idProblema', '$commento', 1) ";
     if(mysqli_query($conn, $qCom)){
-    echo"inserimento avvenuto con successo";
+        echo"commento inserito con successo";
     }  else{
             echo'errore:'.mysqli_error($conn);
         }
+        
 ?>      
