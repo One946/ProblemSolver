@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+    <meta charset="utf-8" />
 	<title>2.0</title>
-
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">	
 	<link rel="stylesheet" type="text/css" href="http://localhost/2.0/css/main.css">
 </head>
-<body background="messina.jpg">
+<body class="parallax" id="body">
 	
 
 	<div class="container">
@@ -64,32 +63,29 @@
 					<a href="#">Naviga Problemi</a></a>
 					<a href="#">Riporta Problema</a>
 					<a href="#">Login/Registrati</a>
-			</div>
+            </div>
+            
+            <div id="problemi"></div>
 
-    <div class="stripe" style="opacity:0.94">
+    <div class="stripe" id="ricerca" style="opacity:0.94">
 
-        <form method="POST" action="cercaTag.php">
+ 
         <label for="cercaTag"> <b>Cerca problemi per tag </b> </label><br>
-        <input type="text" name="cercaTag" id="cercaTag"><button id="1">Cerca!</button><br>
-        </form>
-        
-        <form method="POST" action="cercaCreatore.php">
+        <input type="text" id="cercaTag">
+        <button id="1" onclick="cercaTag(spawnProb)">Cerca!</button><br>
+
         <label for="cercaCreatore"> <b>Cerca problemi per creatore </b></label><br>
-        <input type="text" name="Nome"  placeholder="NOME"> <input type="text" namespace="Cognome"  placeholder="COGNOME"> <button>Cerca!</button><br>
-        </form>
+        <input type="text" id="Nome"  placeholder="NOME"> <input type="text" id="Cognome"  placeholder="COGNOME">
+        <button id="2" onclick="cercaCreatore(spawnProb)">Cerca!</button><br>
 
-        <form method="POST" action="cercaAttivo.php">
         <label for="cerca"> <b>Cerca utente più attivo </b> </label><br>    
-         <button >Cerca!</button>
-        </form>        
-        
-        <form method="POST" action="cercaCategoria.php">
-            <label for="cerca"> <b>Cerca problemi per categoria categoria </b> </label><br>
-            <select type="text" id="categoria" name="categoria" class="categoria" required>
+         <button id="3" onclick="cercaAttivo()">Cerca!</button>  <br>  
 
-            </select>
-            <button id="4">Cerca!</button>
-        </form>
+        <label for="cerca"> <b>Cerca problemi per categoria categoria </b> </label><br>
+        <select type="text" id="categoria" name="categoria" class="categoria" required>
+
+        </select>
+        <button id="4" onclick="cercaCategoria(spawnProb)">Cerca!</button>
     </div>
 
 
@@ -104,21 +100,135 @@
 			document.getElementById("side-menu").style.width="0px"
 			document.getElementById("main.").style.marginLeft="0px"
 		}
-	</script>
 
-    <script>
-            function cercaTag(){
-                var xhr= new x
+        var select = document.getElementById("categoria");
+
+        var selectCategorie = function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET","http://localhost/2.0/php/categorie.php");
+        xhr.onload=function(){
+            var arrCategorie = JSON.parse(xhr.responseText);
+            var i=0; 
+            while(i<arrCategorie.length){
+                select.innerHTML+= `  <option value="${arrCategorie[i].descrizione}" > ${arrCategorie[i].descrizione} </option>  ` ; 
+                i++;
             }
-            function cercaCreatore(){
+        };
+        xhr.send();
+        };
+
+        select.addEventListener("click",selectCategorie, {once: true});
+
+            function cercaTag(spawnProb){
+                var stringTag = document.getElementById("cercaTag").value
+                var xhr= new XMLHttpRequest;
+                xhr.open("POST","http://localhost/2.0/php/cercaTag.php");
+                xhr.onload=function(){
+                    var problemi =JSON.parse(this.responseText);
+                    for(i=0;i<problemi.length;i++){
+                        spawnProb(problemi[i]);
+                    }
+                };
+                xhr.send(stringTag);
                 
             }
-            function cercaCategoria(){
-                
+
+
+            function cercaCreatore(spawnProb){
+                var utente={
+                    Nome: document.getElementById("Nome").value,
+                    Cognome: document.getElementById("Cognome").value
+                };
+                var xhr= new XMLHttpRequest;  
+                xhr.open("POST","http://localhost/2.0/php/cercaCreatore.php");
+                xhr.onload=function(){
+                    var problemi =JSON.parse(this.responseText);
+                    //console.log(JSON.parse(this.responseText));
+                    spawnProb(problemi);
+                };
+                xhr.send(JSON.stringify(utente));
+                		// funzione di visualizzazione problemi
             }
+
+
+            function cercaCategoria(spawnProb){
+                var categoria = document.getElementById("categoria").value
+                var xhr= new XMLHttpRequest;
+                console.log(categoria)
+                xhr.open("POST","http://localhost/2.0/php/cercaCategoria.php");
+                xhr.onload=function(){
+                    var problemi =JSON.parse(this.responseText);
+                    console.log(problemi);
+                    spawnProb(problemi);
+                };
+                xhr.send(categoria);  
+            }
+
+// funzione dell'utente più attivo
             function cercaAttivo(){
-                
+                var xhr= new XMLHttpRequest;
+                xhr.open("GET","http://localhost/2.0/php/cercaAttivo.php");
+                xhr.onload=function(){
+                    var utente = JSON.parse(this.responseText);
+                    var xhr2 = new XMLHttpRequest;
+                    xhr2.open("POST","http://localhost/2.0/php/probCount.php");
+                    xhr2.onload=function(){
+                        var count = (JSON.parse(this.responseText)["COUNT(*)"]); 
+                        var divAttivo= document.createElement("div");
+                        divAttivo.classList.add("stripe");
+                        document.getElementById("body").appendChild(divAttivo);
+                        document.getElementById("ricerca").remove();
+                        var titoloAttivo = document.createElement("h1");
+                        titoloAttivo.innerHTML="L'utente più attivo è :"+utente[0].Nome+" "+utente[0].Cognome;
+                        var pAttivo= document.createElement("p");
+                        pAttivo.innerHTML="Questo utente ha effettuato "+count+" post!";
+
+                        divAttivo.appendChild(titoloAttivo);
+                        divAttivo.appendChild(pAttivo);
+
+                    };
+
+
+                    xhr2.send(utente[0].secretID);
+                };
+                xhr.send();   
             }
+
+//funzione per visualizzare i problemi
+            function spawnProb(data){
+            document.getElementById("ricerca").remove();    
+		// visualizzo i problemi
+			for(i=0; i< data.length; i++){
+                var div;
+                var h1;
+                var p;
+                var button;
+                var testo;
+                
+                div=document.createElement("div");
+                div.setAttribute("id", "probContainer");
+                h1=document.createElement("h1");
+                h1.setAttribute("id","titolo");
+                p=document.createElement("p");
+                p.setAttribute("id","descrizione");
+
+                div.style.background="#f4f4f4";
+                div.style.opacity="0.95";
+                div.style.width="1000px"
+                div.style.borderRadius="20px";
+                div.style.color="#3b5998";
+                div.style.margin="auto";
+                div.style.textAlign="center";
+
+                document.getElementById("problemi").appendChild(div);
+                h1.innerHTML=data[i].titolo;
+                p.innerHTML=data[i].descrizione;
+
+                div.appendChild(h1);
+                div.appendChild(p);
+			}
+
+		}
     </script>
 
 

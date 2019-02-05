@@ -137,11 +137,7 @@
         //funzione visualizzazione singolo problema
         function singoloProblema(e){
             idProblema=parseInt(e.target.id.substring(1));
-            figli = document.getElementById("problemi").getElementsByTagName("div");//nascondo gli altri problemi
-			for(i=0;i<figli.length;i++){
-                figli[i].style.visibility="hidden";
-            };
-            console.log(idProblema)
+			document.getElementById("problemi").remove();
             var xhr1 = new XMLHttpRequest();
 			xhr1.open('POST','http://localhost/2.0/php/problema.php');//uttente problema e tag nella stessa query
 			xhr1.onreadystatechange = function() {
