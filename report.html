@@ -26,6 +26,7 @@
             <ul class="navbar-nav">
                 <li><a href="http://localhost/2.0/index.html">Home</a></li>
                 <li><a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></li>
+                <li><a href="http://localhost/2.0/risolti.html">Naviga Problemi Risolti</a></li>
                 <li><a href="#">Riporta Problema</a></li>
                 <li><a href="http://localhost/2.0/login.html">Login/Registrati</a></li>
                 <li><a href="http://localhost/2.0/cerca.html"> Cerca Problemi</a><li>
@@ -150,7 +151,7 @@
             post.open("POST","http://localhost/2.0/php/insert.php");
             post.setRequestHeader('Content-Type', 'application/json')
             post.onload= function(){
-                alert("il problema è stato segnalato correttamente");
+                alert(this.responseText);
             };
             post.send(problema);
         }

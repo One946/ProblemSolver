@@ -84,9 +84,7 @@
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET','http://localhost/2.0/php/problemi.php');
 		xhr.onload=function(){
-            console.log(this.responseText)
 			var arrProb =JSON.parse(this.responseText);
-            console.log(arrProb);
 			spawnProb(arrProb);
 		};
         xhr.send();
@@ -157,11 +155,38 @@
                 var divProblema = document.getElementById("problema");
                 divProblema.className="stripe";
                 divProblema.style.visibility="visibile";
-                //titolo del problema
+                //ID Problema
 				var idP=document.createElement("small");
 				idP.setAttribute("id","idp");
+				idP.style.marginLeft="260px";
 				divProblema.appendChild(idP);
 				idP.innerHTML= payload1.problema.idProblema;
+
+				//Pulsanti Modifica/Elimina/Risolvi
+				//Modifica
+				var bModifica = document.createElement("button");
+				bModifica.style.cssFloat="right";
+				bModifica.style.marginRight="5px";
+				bModifica.innerHTML="Modifica";
+				bModifica.setAttribute("id","bModifica")
+				divProblema.appendChild(bModifica);
+				//Elimina
+				var bElimina = document.createElement("button");
+				bElimina.style.cssFloat="right";
+				bElimina.style.marginRight="5px";
+
+				bElimina.innerHTML="Elimina";
+				bElimina.setAttribute("id","bElimina");
+				divProblema.appendChild(bElimina);
+				//Risolvi
+				var bRisolvi = document.createElement("button");
+				bRisolvi.style.cssFloat="right";
+				bRisolvi.style.marginRight="5px";
+				bRisolvi.innerHTML="Risolvi";
+				bRisolvi.setAttribute("id","bRisolvi")
+				divProblema.appendChild(bRisolvi);
+
+				//Titolo problema
                 var titolo = document.createElement("h1");
                 titolo.setAttribute("id", "titolo");
                 divProblema.appendChild(titolo);
@@ -170,13 +195,15 @@
                 var descrizione = document.createElement("p");
                 descrizione.setAttribute("id", "descrizione");
                 divProblema.appendChild(descrizione);
-                console.log(payload1.problema);
-                if(payload1.problema.anonimo){
+                
+				if(payload1.problema.anonimo){
 					k="<br><i>l'utete ha deciso di effettuare la segnalazione in maniera anonima</i>"
 				}
 				else{
 					k="<br><br><small><i>segnalazione effettuata dall'utente numero: "+payload1.problema.secretID+".  Che corrisconde all'utente: "+payload1.utenti.Nome +" "+ payload1.utenti.Cognome+"</i></small><br><p> risolto il :"+payload1.problema.dataRisol+"</p>";
 				}
+
+
                 descrizione.innerHTML=payload1.problema.descrizione+k; //il valore di k cambio al cambiare della volontà dell'utente di rimanere anonimo o no
 
                 //TAG
@@ -208,7 +235,43 @@
 
 
                 commenta.addEventListener("click",inserisciCommento);
-            }
+
+				bElimina.onclick=eliminaProblema;
+				bRisolvi.onclick=risolviProblema;
+				//bModifica.onclick=modificaProblema;
+				
+
+			function eliminaProblema(){
+				var idProblema= document.getElementById("idp").innerHTML;
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST","http://localhost/2.0/php/eliminaProblema.php");
+				xhr.onload=function(){
+					alert(this.responseText);
+				}
+				xhr.send(idProblema);
+
+			}
+			function risolviProblema(){
+				var idProblema= document.getElementById("idp").innerHTML;
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST","http://localhost/2.0/php/risolviProblema.php");
+				xhr.onload=function(){
+					alert(this.responseText);
+				}
+				xhr.send(idProblema);
+			}
+
+			/*function modificaProblema(){
+				var idProblema= document.getElementById("idp").innerHTML;
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST","http://localhost/2.0/php/modificaProblema.php");
+				xhr.onload=function(){
+					alert(this.responseText);
+				}
+				xhr.send(idProblema);
+			}	*/
+
+        }
 
             //funzione che mostra i commenti
             function showCommenti(idProblema){

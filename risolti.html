@@ -29,7 +29,7 @@
 				<ul class="navbar-nav">
 					<li><a href="http://localhost/2.0/index.html">Home</a></li>
 					<li><a href="http://localhost/2.0/problemi.html">Naviga Problemi</a></li>
-					<li><a href="http://localhost/2.0/risolti.html">Naviga Problemi Risolti</a></li>
+					<li><a href="http://localhost/2.0/risolti.html">Naviga Problemi Risolti</a></li>	
 					<li><a href="http://localhost/2.0/report.html">Riporta Problema</a></li>
 					<li><a href="http://localhost/2.0/login.html">Login/Registrati</a></li>
 					<li><a href="http://localhost/2.0/cerca.html"> Cerca Problemi</a><li>
@@ -53,8 +53,11 @@
 						var d = new Date();
 						  d.setTime(d.getTime() *0);
 						  var expires = "expires="+ d.toUTCString();
+						  console.log(document.cookie);
+						  console.log(document.cookie["secretID"]);
 						  //document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 						document.cookie="secretID"+"="+document.cookie+";"+expires+"path=/"
+						console.log(document.cookie);
 					}
 					</script>
 
@@ -82,11 +85,9 @@
 
 		//invio la richiesta per richiedere i problemi
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET','http://localhost/2.0/php/problemi.php');
+		xhr.open('GET','http://localhost/2.0/php/problemiRisolti.php');
 		xhr.onload=function(){
-            console.log(this.responseText)
 			var arrProb =JSON.parse(this.responseText);
-            console.log(arrProb);
 			spawnProb(arrProb);
 		};
         xhr.send();
@@ -144,14 +145,14 @@
 				if (this.readyState == 4 && this.status == 200) {
                     payload1=(JSON.parse(this.responseText)); //payload contenente il problema
 
-                            formattazione(payload1,showCommenti,inserisciCommento)
+                            formattazione(payload1,showCommenti)
                             showCommenti(idProblema)   
                 }
             }
             xhr1.send(idProblema);
            
             //funzione che da la struttura al singolo problema
-            function formattazione(payload1,showCommenti,inserisciCommento){
+            function formattazione(payload1,showCommenti){
                 scroll(0,0);//torno in cima alla pagina per visualizzare il problema
                 //selezione il div che conterrà il problema
                 var divProblema = document.getElementById("problema");
@@ -170,12 +171,11 @@
                 var descrizione = document.createElement("p");
                 descrizione.setAttribute("id", "descrizione");
                 divProblema.appendChild(descrizione);
-                console.log(payload1.problema);
                 if(payload1.problema.anonimo){
 					k="<br><i>l'utete ha deciso di effettuare la segnalazione in maniera anonima</i>"
 				}
 				else{
-					k="<br><br><small><i>segnalazione effettuata dall'utente numero: "+payload1.problema.secretID+".  Che corrisconde all'utente: "+payload1.utenti.Nome +" "+ payload1.utenti.Cognome+"</i></small><br><p> risolto il :"+payload1.problema.dataRisol+"</p>";
+					k="<br><br><small><i>segnalazione effettuata dall'utente numero: "+payload1.problema.secretID+".  Che corrisconde all'utente: "+payload1.utenti.Nome +" "+ payload1.utenti.Cognome+"</i></small>";
 				}
                 descrizione.innerHTML=payload1.problema.descrizione+k; //il valore di k cambio al cambiare della volontà dell'utente di rimanere anonimo o no
 
@@ -188,26 +188,6 @@
 					i++;
                 }
                 descrizione.innerHTML+="<br><br><b> TAG : </b> "+ tag;
-                
-                //creo la textarea per l'inserimento del commento
-                txt=document.createElement("TEXTAREA");
-                txt.setAttribute("id", "txt");
-                txt.maxLength = "3000";
-                txt.cols = "80";
-                txt.rows = "10";
-                divProblema.appendChild(txt);
-                //creo il bottone per inviare il commento
-                var commenta =document.createElement("button");
-				commenta.setAttribute("id", "commenta");
-				commenta.innerHTML="commenta!";
-				commenta.style.backgroundColor="#3b5998";
-				commenta.style.color="white";
-				commenta.style.margin="none";
-                commenta.style.marginTop="15px";
-                divProblema.appendChild(commenta);
-
-
-                commenta.addEventListener("click",inserisciCommento);
             }
 
             //funzione che mostra i commenti
@@ -257,32 +237,6 @@
 				};
 				xhr.send(idProblema)
             }
-
-
-            function inserisciCommento(){
-				if(!isNaN(id)){
-                    var commento={
-						descrizione: document.getElementById("txt").value,
-						secretID: id,
-						idProblema:parseInt(document.getElementById("idp").innerHTML) 
-					};
-					if(commento.descrizione===""||commento.descrizione===" "){
-						alert("non puoi lasciare un commento vuoto!");
-					}
-					else{
-						var xhr = new XMLHttpRequest();
-						xhr.open("POST","http://localhost/2.0/php/comment.php");
-						xhr.onreadystatechange = function() {
-							if (this.readyState == 4 && this.status == 200) {
-								alert(this.responseText);
-							}
-						};
-						xhr.send(JSON.stringify(commento));
-						showCommenti(commento.idProblema);
-					}
-				}
-            }
-            
             
         };
 

@@ -69,12 +69,26 @@ if(mysqli_query($conn, $qIU)){
         echo "Error: ". mysqli_error($conn);
     }
 
+    //inserisco lo stato del problema nella tabella che monitora lo stato dei problemi
+    $qStato="UPDATE Problemi SET dataRisol = NOW() WHERE idProblema = ".$a." ;";
+    echo($qStato);
+    if(mysqli_query($conn, $qStato)){
+        $qStato2="INSERT INTO StatoProblema (idProblema, idStato) VALUES (".$a.", 2);";
+        if(mysqli_query($conn, $qStato2)){
+            echo("Prolema inserito correttamente ");
+        }else{
+            echo("Errore nell'inserimento del problema in fase 2 ");
+            echo$qStato2;
+        }
+    }else{
+        echo("Errore nell'inserimento del problema in fase 1 ");
+    }
+
 
 
     //inserimento tag nel database
 
     $arrayTag= explode(" ", $tag); //divido la singola stringa che ricevo come input dei tag in tanti piccoli tag da inserire nel dizionario o da legare al problema
-    var_dump($arrayTag);
     
     foreach ($arrayTag as $arrayTag){
         //query di inserimento tag
@@ -98,7 +112,8 @@ if(mysqli_query($conn, $qIU)){
             }
         }
     
-    } 
+    }
+
    
 mysqli_close($conn);
 
