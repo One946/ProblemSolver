@@ -175,7 +175,7 @@
 					k="<br><i>l'utete ha deciso di effettuare la segnalazione in maniera anonima</i>"
 				}
 				else{
-					k="<br><br><small><i>segnalazione effettuata dall'utente numero: "+payload1.problema.secretID+".  Che corrisconde all'utente: "+payload1.utenti.Nome +" "+ payload1.utenti.Cognome+"</i></small><br><p> risolto il :"+payload1.problema.dataRisol+"</p>";
+					k="<br><br><small><i>segnalazione effettuata dall'utente numero: "+payload1.problema.secretID+".  Che corrisconde all'utente: "+payload1.utenti.Nome +" "+ payload1.utenti.Cognome+"</i></small>";
 				}
                 descrizione.innerHTML=payload1.problema.descrizione+k; //il valore di k cambio al cambiare della volontà dell'utente di rimanere anonimo o no
 

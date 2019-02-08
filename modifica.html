@@ -74,6 +74,9 @@
 
     <div>
         <form id="form">
+            <label for="numProb"><b> Inserisci il numero del problema da modificare: </b></label> <br>
+            <input type="text" id="idProb"  class="tag" placeholder="num problema da modificare" required> <br>
+
             <label for="titolo"><b> Inserisci il titolo del problema: </b></label> <br>
             <input type="text" id="titolo"  class="titolo" placeholder="TITOLO" required> <br>
             
@@ -128,6 +131,7 @@
 
        var crtJson = function () {
            var problema= {
+               idProblema:document.getElementById("idProb").value,
                titolo: document.getElementById("titolo").value,
                descrizione: document.getElementById("descrizione").value,
                tag: document.getElementById("tag").value,
@@ -148,7 +152,7 @@
             problema = JSON.stringify(problema);
             console.log(problema);
             var post = new XMLHttpRequest();
-            post.open("POST","http://localhost/2.0/php/insert.php");
+            post.open("POST","http://localhost/2.0/php/modifica.php");
             post.setRequestHeader('Content-Type', 'application/json')
             post.onload= function(){
                 alert(this.responseText);

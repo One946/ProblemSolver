@@ -3,7 +3,7 @@
     require("config/config.php");
     session_start();
 //Query per selezionare tutti i problemi che non sono stati risolti e visualizzarli
-    $query1 = "SELECT * FROM Problemi WHERE idProblema NOT IN (SELECT idProblema FROM Problemi WHERE dataSegn < dataRisol) ORDER BY idProblema DESC";
+    $query1 = "SELECT * FROM Problemi WHERE idProblema IN (SELECT idProblema FROM StatoProblema WHERE idStato = 2 OR idStato = 3) ORDER BY idProblema DESC";
     
     //Prendi il risultato
     $ris1 = mysqli_query($conn, $query1);

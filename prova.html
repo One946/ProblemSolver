@@ -200,7 +200,10 @@
 					k="<br><i>l'utete ha deciso di effettuare la segnalazione in maniera anonima</i>"
 				}
 				else{
-					k="<br><br><small><i>segnalazione effettuata dall'utente numero: "+payload1.problema.secretID+".  Che corrisconde all'utente: "+payload1.utenti.Nome +" "+ payload1.utenti.Cognome+"</i></small><br><p> risolto il :"+payload1.problema.dataRisol+"</p>";
+					k="<br><br><small><i>segnalazione effettuata dall'utente numero: "+payload1.problema.secretID+".  Che corrisconde all'utente: "+payload1.utenti.Nome +" "+ payload1.utenti.Cognome+"</i></small><br>";
+					if(payload1.problema.dataRisol!== null){
+						k+="<p> risolto il :"+payload1.problema.dataRisol+"</p>"
+					}
 				}
 
 
@@ -238,6 +241,7 @@
 
 				bElimina.onclick=eliminaProblema;
 				bRisolvi.onclick=risolviProblema;
+				bModifica.onclick= modificaProblema;
 				//bModifica.onclick=modificaProblema;
 				
 
@@ -261,15 +265,17 @@
 				xhr.send(idProblema);
 			}
 
-			/*function modificaProblema(){
+			function modificaProblema(){
+				/*
 				var idProblema= document.getElementById("idp").innerHTML;
 				var xhr = new XMLHttpRequest();
 				xhr.open("POST","http://localhost/2.0/php/modificaProblema.php");
 				xhr.onload=function(){
 					alert(this.responseText);
 				}
-				xhr.send(idProblema);
-			}	*/
+				xhr.send(idProblema); */ 
+				document.location.href ="http://localhost/2.0/modifica.html";
+			}	
 
         }
 

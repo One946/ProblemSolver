@@ -2,7 +2,6 @@
 <html>
 <head>
   <title>Registrati</title>
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">  -->
   <link rel="stylesheet" type="text/css" href="http://localhost/2.0/css/main.css">
   <link rel="stylesheet" type="text/css" href="http://localhost/2.0/css/registrati.css">
 </head>
@@ -67,42 +66,65 @@
         </div>
 
 <!--Form di registrazione-->
-<form method="POST" action="register.php">
-    <h1>Registrati</h1>
-    <p>Inserisci i tuoi dati per creare un account.</p>
+  <form id="form">
+      <h1>Registrati</h1>
+      <p>Inserisci i tuoi dati per creare un account.</p>
 
-    <label for="email"><b> Email </b></label>
-    <input type="text" placeholder="Email" name="email" required>
+      <label for="email"><b> Email </b></label>
+      <input type="text" placeholder="Email" id="email" required>
 
-    <label for="nome"><b> Nome </b></label>
-    <input type="text" placeholder="Nome" name="nome" required>
+      <label for="nome"><b> Nome </b></label>
+      <input type="text" placeholder="Nome" id="nome" required>
 
-    <label for="cognome"><b> Cognome </b></label>
-    <input type="text" placeholder="Cognome" name="cognome" required>
+      <label for="cognome"><b> Cognome </b></label>
+      <input type="text" placeholder="Cognome" id="cognome" required>
 
-    <label for="cf"><b> Codice Fiscale </b></label>
-    <input type="text" placeholder="Codice Fiscale" name="cf" required maxlength="16" minlength="16">
+      <label for="cf"><b> Codice Fiscale </b></label>
+      <input type="text" placeholder="Codice Fiscale" id="cf" required maxlength="16" minlength="16">
 
-    <label for="psw"><b> Password </b></label>
-    <input type="password" placeholder="Password" name="password" required>
+      <label for="psw"><b> Password </b></label>
+      <input type="password" placeholder="Password" id="password" required>
 
-    <label for="pswr"><b> Inserisci nuovamente la password </b></label>
-    <input type="password" placeholder="Password" name="passwordr" required>
+      <label for="pswr"><b> Inserisci nuovamente la password </b></label>
+      <input type="password" placeholder="Password" id="passwordr" required>
 
-    <label for="secretID"><b> Inserisci un numero utente che sarà utilizzato per garantire la tua privacy</b></label>
-    <input type="text" placeholder="secretID" name="secretID" required>
-    
-    
-    <a class="termini" href="#" style="color:dodgerblue">Termini e Politiche di Privacy</a>
+      <label for="secretID"><b> Inserisci un numero utente che sarà utilizzato per garantire la tua privacy</b></label>
+      <input type="text" placeholder="secretID" id="secretID" required>
+      
+      
+      <a class="termini" href="#" style="color:dodgerblue">Termini e Politiche di Privacy</a>
 
-    <div class="clearfix">
-      <button type="button" class="cancelbtn">Cancel</button>
-      <button type="submit" class="signupbtn">Sign Up</button>
-    </div>
-  </form>
+      <div class="clearfix">
+        <button class="cancelbtn">Cancel</button>
+        <button class="signupbtn">Sign Up</button>
+      </div>
+    </form>
 </div>
 
 <script>
+  document.getElementById("form").addEventListener("submit",registra)
+  function registra(e){
+    e.preventDefault();
+    var json={
+      email:document.getElementById("email").value,
+      nome:document.getElementById("nome").value,
+      cognome:document.getElementById("cognome").value,
+      cf:document.getElementById("cf").value,
+      password:document.getElementById("password").value,
+      passwordr:document.getElementById("passwordr").value,
+      secretID:document.getElementById("secretID").value
+    };
+    console.log(json);
+    var xhr= new XMLHttpRequest();
+    xhr.open("POST","http://localhost/2.0/php/register.php");
+    xhr.onload=function (){
+        console.log(this.responseText);
+    };
+    xhr.send(JSON.stringify(json));
+  }
+
+
+
 //sccript per menù a scomparsa
 		function openSlideMenu(){
 			document.getElementById("side-menu").style.width="250px"
