@@ -7,5 +7,5 @@
     $cate= mysqli_fetch_all($ris, MYSQLI_ASSOC);
     $categorie=json_encode($cate);
     echo($categorie);   
-
+    mysqli_close($conn);
 ?>  

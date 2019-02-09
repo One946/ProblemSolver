@@ -14,11 +14,11 @@
     if($a){
         
         $utente=mysqli_fetch_assoc($a);
-        //$_SESSION["secretID"] = $utente['secretID'];
         $utente = json_encode($utente);
         echo($utente);
     }
     else{
         echo("errore di autenticazione");
     }
+    mysqli_close($conn);
 ?>

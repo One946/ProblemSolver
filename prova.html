@@ -76,10 +76,6 @@
 
 
 	<script>
-		//selezione il div padre che conterrà tutti i problemi
-		//var div= document.getElementById("problemi");//div contine l'anteprima di tutti i problemi
-		//var div2= document.getElementById("problema");//div2 contiene il singolo problema
-
 		//invio la richiesta per richiedere i problemi
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET','http://localhost/2.0/php/problemi.php');
@@ -242,7 +238,6 @@
 				bElimina.onclick=eliminaProblema;
 				bRisolvi.onclick=risolviProblema;
 				bModifica.onclick= modificaProblema;
-				//bModifica.onclick=modificaProblema;
 				
 
 			function eliminaProblema(){
@@ -355,11 +350,7 @@
             
         };
 
-//*****************************************************************************************************		
-
-
-
-			//script per aprire e chiudere il menù a scomparsa in modalità mobile
+		//script per aprire e chiudere il menù a scomparsa in modalità mobile
 		function openSlideMenu(){
 			document.getElementById("side-menu").style.width="250px"
 			document.getElementById("main.").style.marginLeft="250px"

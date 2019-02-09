@@ -8,11 +8,11 @@ $query= "INSERT INTO Utenti (Nome, Cognome,email,CF,password,secretID) VALUES('{
 
 
 
-if($_POST['password'] === $_POST['passwordr']){
+if($_POST['password'] === $_POST['passwordr']){//controllo che l'utente abbia inserito correttamente la password e la conferma
     if(mysqli_query($conn, $query)){
         echo'la registrazione è avvenuta con successo';
     }else{
-        echo"c'è stato un errore nella registrazione: ".mysqli_error($conn);
+        echo"c'è stato un errore nella registrazione: la password e la conferma password non corrispondono";
     }
 
 }

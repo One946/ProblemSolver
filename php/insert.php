@@ -12,7 +12,6 @@
     $titolo = $x["titolo"];
     $descrizione = $x["descrizione"];
     $tag = $x["tag"];
-    //$anonimo= mysqli_real_escape_string($conn,$_REQUEST["anonimo"]); non mi serve usare l'escape perchè sovrascrivo la variabile
     $categoria = $x["categoria"];
     $ubicazione = $x["ubicazione"];
     $secretID= $x["secretID"];
@@ -22,26 +21,20 @@
     } else{
         $anonimo = 0;
     }
-    
-    
-//***************************************************************************** */
 
-$qIU="INSERT INTO Ubicazioni(descrizione) VALUES('$ubicazione')";
-if(mysqli_query($conn, $qIU)){
-    $qIdUb="SELECT idUbicazione FROM Ubicazioni WHERE descrizione = '".$ubicazione."'"; //query selezione idUbicazione
-    $rIdUb = mysqli_query($conn,$qIdUb); //esecuzione delle query
-    $idUbicazione= mysqli_fetch_assoc($rIdUb);  //risultato della query
-}else{
-    $qIdUb="SELECT idUbicazione FROM Ubicazioni WHERE descrizione = '".$ubicazione."'"; //query selezione idUbicazione
-    $rIdUb = mysqli_query($conn,$qIdUb); //esecuzione delle query
-    $idUbicazione= mysqli_fetch_assoc($rIdUb);  //risultato della query
-  }
+    //inserisco l'ubicazione nel DB se non è presente
+    $qIU="INSERT INTO Ubicazioni(descrizione) VALUES('$ubicazione')";
+    if(mysqli_query($conn, $qIU)){
+        $qIdUb="SELECT idUbicazione FROM Ubicazioni WHERE descrizione = '".$ubicazione."'"; //query selezione idUbicazione
+        $rIdUb = mysqli_query($conn,$qIdUb); //esecuzione delle query
+        $idUbicazione= mysqli_fetch_assoc($rIdUb);  //risultato della query
+    }else{//altrimenti se essa è presente la seleziono da quelle già presenti per legarla al problema
+        $qIdUb="SELECT idUbicazione FROM Ubicazioni WHERE descrizione = '".$ubicazione."'"; //query selezione idUbicazione
+        $rIdUb = mysqli_query($conn,$qIdUb); //esecuzione delle query
+        $idUbicazione= mysqli_fetch_assoc($rIdUb);  //risultato della query
+    }
 
-
-//**********************************************************+ */
-
-
-    //seleziono la categoria per l'inserimento nel db
+    //seleziono la categoria per l'inserimento nel DB
     $qCat= "SELECT idCategoria FROM Categorie WHERE descrizione ='".$categoria."'";
     $risCat=mysqli_query($conn, $qCat);
     if($risCat){
@@ -50,15 +43,12 @@ if(mysqli_query($conn, $qIU)){
         echo("errore nella selezione della categoria");
     }
 
-    //la variabile secretID viene presa dalla sessione dell'utente che ha effettuato il login
-    //query di inserimento problema nel db
-    //$qProb= "INSERT INTO Problemi (secretID, boolAnonimo, idUbicazione, idCategoria, descrizione, titolo) VALUES (".$_SESSION["secretID"].", ".$anonimo.", ".$idUbicazione["idUbicazione"].",".$cate["idCategoria"]." , '".$descrizione."', '".$titolo."')" ;
+    //query di inserimento problema nel DB
     $qProb= "INSERT INTO Problemi (secretID, boolAnonimo, idUbicazione, idCategoria, descrizione, titolo) VALUES (".$secretID.", ".$anonimo.", ".$idUbicazione["idUbicazione"].",".$cate["idCategoria"]." , '".$descrizione."', '".$titolo."')" ;
 
    
-    if (mysqli_query($conn, $qProb)) { //se la query va a buon fine eseguo la queri per ottenere l'id del problema creato che viene creato in automatico tramite l'auto increment
+    if (mysqli_query($conn, $qProb)) { //se la query va a buon fine eseguo la query per ottenere l'id del problema creato che viene creato in automatico tramite l'auto increment
         //query per ottenere l'id del problema appena creato
-
         $qID= "SELECT idProblema FROM Problemi WHERE (boolAnonimo = '$anonimo') &&  (descrizione = '$descrizione') && (titolo = '$titolo')";
         $risID = mysqli_query($conn, $qID);
         $idProb = mysqli_fetch_assoc($risID);   
@@ -70,19 +60,12 @@ if(mysqli_query($conn, $qIU)){
     }
 
     //inserisco lo stato del problema nella tabella che monitora lo stato dei problemi
-    $qStato="UPDATE Problemi SET dataRisol = NOW() WHERE idProblema = ".$a." ;";
-    echo($qStato);
-    if(mysqli_query($conn, $qStato)){
         $qStato2="INSERT INTO StatoProblema (idProblema, idStato) VALUES (".$a.", 2);";
         if(mysqli_query($conn, $qStato2)){
             echo("Prolema inserito correttamente ");
         }else{
             echo("Errore nell'inserimento del problema in fase 2 ");
-            echo$qStato2;
         }
-    }else{
-        echo("Errore nell'inserimento del problema in fase 1 ");
-    }
 
 
 
@@ -103,7 +86,7 @@ if(mysqli_query($conn, $qIU)){
         if($valId){                        
             //query di collegamento Tag-Problema
             $qBridge = "INSERT INTO tagBridge (idProblema, idTag) VALUES ($a,   $valId)";
-            if($conn->query($qBridge)){  //metodo PDO per eseguire la query
+            if($conn->query($qBridge)){
                 
                 $k="inserimento tag  avvenuto con successo";
                 echo($k);
@@ -113,8 +96,6 @@ if(mysqli_query($conn, $qIU)){
         }
     
     }
-
-   
 mysqli_close($conn);
 
 ?>

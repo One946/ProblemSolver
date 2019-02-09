@@ -14,5 +14,4 @@
 
     mysqli_free_result($ris);
     mysqli_close($conn);
-
 ?>

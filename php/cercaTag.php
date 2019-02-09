@@ -23,5 +23,4 @@ for ($i=0; $i<count($arrayTag); $i++){
 $response=json_encode($prob);
 echo($response);
 mysqli_close($conn);
-
 ?>

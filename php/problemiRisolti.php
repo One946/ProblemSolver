@@ -11,6 +11,7 @@
     $prob = mysqli_fetch_all($ris1,MYSQLI_ASSOC);
     mysqli_free_result($ris);
     mysqli_close($conn);
+    //rispondo al client con l'informazione desiderata
     $problemi = json_encode($prob);
     echo($problemi);
 ?>

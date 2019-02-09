@@ -18,7 +18,7 @@
     $ris3 = mysqli_query($conn, $query3);
     $utenti = mysqli_fetch_assoc($ris3);
     
-	
+	//query per ottenere i tag
 	$qt = "SELECT descrizione FROM DizionarioTag WHERE idTag IN (SELECT idTag FROM tagBridge WHERE idProblema =".$problema["idProblema"].");";
 	$risqt = mysqli_query($conn, $qt);
     while($row = mysqli_fetch_assoc($risqt)){
@@ -29,6 +29,7 @@
         "utenti" => $utenti,
         "tag" => $aTag
     );
+   //rispondo al client 
     $json=json_encode($array);
     echo $json;
 	
