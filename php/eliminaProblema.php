@@ -6,7 +6,7 @@
     $query="UPDATE Problemi SET dataRisol = NOW() WHERE idProblema = ".$data." ;";
     if(mysqli_query($conn, $query)){
         //identifico il problema nella tabella di bridge come problema oscurato
-        $query2="INSERT INTO StatoProblema (idProblema, idStato) VALUES (".$data.", 0);";
+        $query2="UPDATE StatoProblema SET idStato=0 WHERE idProblema = ".$data.";";
         if(mysqli_query($conn, $query2)){
             echo("Prolema eliminato correttamente");
         }else{

@@ -2,9 +2,6 @@
     session_start();
     require("config/db.php");
     require("config/config.php");
-    //query di match tra email e password
-        //se va a buon fine prendo tutto da utente e inizializzo la sessione
-        //select * from Utenti where email= 'giuseppe.dagostin94@gmail.com' && password=MD5('password')
     $data=file_get_contents("php://input"); //normalmente php non può leggere nella post le variabili json per tanto devo andarle a cercare nel corpo della richiesta
     $x=json_decode($data, true);
 
