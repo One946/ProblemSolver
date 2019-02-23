@@ -50,5 +50,5 @@ window.onload= function(){
             };
             post.send(problema);
         }
-       }
+    }
 };

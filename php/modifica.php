@@ -52,7 +52,7 @@
         $qProb= "INSERT INTO Problemi (secretID, boolAnonimo, idUbicazione, idCategoria, descrizione, titolo, ModificaDi) VALUES (".$secretID.", ".$anonimo.", ".$idUbicazione["idUbicazione"].",".$cate["idCategoria"]." , '".$descrizione."', '".$titolo."',".$x["idProblema"].")" ;
     
         
-        if (mysqli_query($conn, $qProb)) { //se la query va a buon fine eseguo la queri per ottenere l'id del problema creato che viene creato in automatico tramite l'auto increment
+        if (mysqli_query($conn, $qProb)) { //se la query va a buon fine eseguo la query per ottenere l'id del problema creato che viene creato in automatico tramite l'auto increment
             //query per ottenere l'id del problema appena creato
     
             $qID= "SELECT idProblema FROM Problemi WHERE ModificaDi = ".$x["idProblema"];

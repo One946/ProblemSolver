@@ -1,22 +1,3 @@
-window.onload=function(){
-            //popolo la select delle categorie dinamicamente
-            var select = document.getElementById("categoria");
-    
-            var selectCategorie = function() {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET","http://localhost/2.0/php/categorie.php");
-            xhr.onload=function(){
-                var arrCategorie = JSON.parse(xhr.responseText);
-                var i=0; 
-                while(i<arrCategorie.length){
-                    select.innerHTML+= `  <option value="${arrCategorie[i].descrizione}" > ${arrCategorie[i].descrizione} </option>  ` ; 
-                    i++;
-                }
-            };
-            xhr.send();
-            };
-    
-            select.addEventListener("click",selectCategorie, {once: true});
             //funzione di ricerca per tag
             function cercaTag(spawnProb){
                 var stringTag = document.getElementById("cercaTag").value
@@ -128,4 +109,18 @@ window.onload=function(){
                 }
     
             }
+window.onload=function (){
+            //popolo la select delle categorie dinamicamente
+            var select = document.getElementById("categoria");
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET","http://localhost/2.0/php/categorie.php");
+            xhr.onload=function(){
+                var arrCategorie = JSON.parse(xhr.responseText);
+                var i=0; 
+                while(i<arrCategorie.length){
+                    select.innerHTML+= `  <option value="${arrCategorie[i].descrizione}" > ${arrCategorie[i].descrizione} </option>  ` ; 
+                    i++;
+                }
+            };
+            xhr.send();
 }
