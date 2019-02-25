@@ -57,8 +57,7 @@
     
             $qID= "SELECT idProblema FROM Problemi WHERE ModificaDi = ".$x["idProblema"];
             $risID = mysqli_query($conn, $qID);
-            $idProb = mysqli_fetch_assoc($risID);   
-            //la variabile $a equivale all'id del problema
+            $idProb = mysqli_fetch_assoc($risID);
             $idNew=$idProb["idProblema"]; 
         } else {
             //altrimenti stampo un messagio d'errore

@@ -19,7 +19,7 @@ window.onload= function(){
       select.addEventListener("click",selectCategorie, {once: true});
 
 
-//creazione json
+//creazione json che conterrà le informazioni riguardo al problema
 
        var crtJson = function () {
            var problema= {

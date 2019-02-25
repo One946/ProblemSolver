@@ -13,7 +13,6 @@ window.onload= function(){
       passwordr:document.getElementById("passwordr").value,
       secretID:document.getElementById("secretID").value
     };
-    console.log(json);
     var xhr= new XMLHttpRequest();
     xhr.open("POST","http://localhost/2.0/php/register.php");
     xhr.onload=function (){

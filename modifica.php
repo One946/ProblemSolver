@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="http://localhost/2.0/css/main.css">
     <link rel="stylesheet" type="text/css" href="http://localhost/2.0/css/report.css">
+    <script src="http://localhost/2.0/js/menu.js"></script>
     <script src="http://localhost/2.0/js/modifica.js"></script>
 </head>
 <body>
@@ -122,16 +123,7 @@ var crtJson = function () {
            };
            return problema;
        }
-   
-   //script per il menù a scomparsa 
-        function openSlideMenu(){
-            document.getElementById("side-menu").style.width="250px"
-            document.getElementById("main.").style.marginLeft="250px"
-        }
-        function closeSlideMenu(){
-            document.getElementById("side-menu").style.width="0px"
-            document.getElementById("main.").style.marginLeft="0px"
-        }
+
     </script>   
 </body>
 </html>

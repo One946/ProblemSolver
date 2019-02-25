@@ -8,9 +8,6 @@
 		};
         xhr.send();
 
-	
-
-
 		// funzione di visualizzazione problemi
 		function spawnProb(data){
 		// visualizzo i problemi
@@ -19,7 +16,6 @@
                 var h1;
                 var p;
                 var button;
-                var testo;
                 
                 div=document.createElement("div");
                 div.setAttribute("id", "probContainer");
@@ -192,6 +188,7 @@
 
             //funzione che mostra i commenti
             function showCommenti(idProblema){
+				 console.log(1);
 				var divCommenti = document.getElementById("divCommenti");
 				divCommenti.style.marginTop="15px";
 				divCommenti.className="stripe";
@@ -240,6 +237,7 @@
 
 
             function inserisciCommento(){
+				//Se l'utente è autenticato inserisce il commento nella base di dati
 				if(!isNaN(id)){
                     var commento={
 						descrizione: document.getElementById("txt").value,
@@ -255,13 +253,12 @@
 						xhr.onreadystatechange = function() {
 							if (this.readyState == 4 && this.status == 200) {
 								alert(this.responseText);
+								showCommenti(commento.idProblema);
 							}
 						};
 						xhr.send(JSON.stringify(commento));
-						showCommenti(commento.idProblema);
+						
 					}
 				}
-            }
-            
-            
+			}   
         };
